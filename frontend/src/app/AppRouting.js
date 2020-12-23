@@ -1,18 +1,18 @@
 import * as React from "react";
-import {Route, Switch, withRouter} from "react-router";
-import {Home} from "./modules/page"
+import { Route, Switch, withRouter } from "react-router";
+import { Home, Compare } from "./modules/page";
 
 const AppRouting = (props) => {
+  const render = () => {
+    return (
+      <Switch>
+        <Route exact path="/" component={Home} />
+        <Route path="/shop/compare.html" component={Compare} />
+      </Switch>
+    );
+  };
 
-    const render = () => {
-        return (
-            <Switch>
-                <Route exact path="/" component={Home}/>
-            </Switch>
-        )
-    }
-
-    return render()
-}
+  return render();
+};
 
 export default withRouter(AppRouting);

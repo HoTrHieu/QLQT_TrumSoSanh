@@ -1,9 +1,6 @@
-import Home from './Home/Home';
+import Home from "./Home/Home";
+import Compare from "./Compare/Compare";
 
-export const containers = [
-    Home
-];
+export const containers = [Home, Compare];
 
-export {
-    Home
-};
+export { Home, Compare };

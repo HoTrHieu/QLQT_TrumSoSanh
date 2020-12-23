@@ -1,18 +1,22 @@
-// import axios from 'axios';
-// import {
-//     AccessExceptions,
-//     ErrorCode,
-//     HandlingExceptions,
-//     ResponseStatus
-// } from '../../models/app';
+import axios from 'axios';
 
-// const defaultConfig = {
-//     baseURL: process.env.REACT_APP_ROOT_API_URL,
-//     withCredentials: true
-// };
+const defaultConfig = {
+    baseURL: process.env.REACT_APP_ROOT_API_URL || 'http://localhost:5000',
+    withCredentials: true
+};
 
-// const HttpService = axios.create(defaultConfig);
+const HttpService = axios.create(defaultConfig);
 
+// config before request
+// HttpService.interceptors.request.use(function (config) {
+//     // Do something before request is sent
+//     return config;
+//   }, function (error) {
+//     // Do something with request error
+//     return Promise.reject(error);
+//   });
+
+// config before response
 // HttpService.interceptors.response.use(
 //     (response: any) => {
 //         const code =
@@ -66,4 +70,4 @@
 //     }
 // );
 
-// export default HttpService;
+export default HttpService;

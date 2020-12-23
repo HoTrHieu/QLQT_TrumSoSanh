@@ -1,6 +1,11 @@
-import * as React from "react";
+import React, {useState, useEffect} from "react";
 import {Slider, Layout, Banner, SpecialOffer, Product} from './../../components';
+import {SearchService} from './../../../core/services';
+
 const Home = (props) => {
+    useEffect(()=>{
+        SearchService.getCrawByKeyWord('hieudeptrai');
+    })
 
     const render = () => {
         return (

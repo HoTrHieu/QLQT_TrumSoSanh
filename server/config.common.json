@@ -1,0 +1,16 @@
+{
+  "es": {
+    "index": {
+      "content": "trumsosanh"
+    }
+  },
+  "jwt": {
+    "secret": "BCFat4MMv7h>*DQ",
+    "accessToken": {
+      "expiresIn": "30m"
+    },
+    "refreshToken": {
+      "ttl": 1.21e+9
+    }
+  }
+}

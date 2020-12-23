@@ -1,0 +1,15 @@
+{
+  "settings": {
+    "es": {
+      "node": "http://localhost:9200"
+    },
+    "mysql": {
+      "host": "localhost",
+      "port": 3306,
+      "username": "root",
+      "password": "123456789",
+      "dbname": "trumsosanh",
+      "sync": true
+    }
+  }
+}

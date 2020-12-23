@@ -1,0 +1,11 @@
+{
+    "required": [
+        "keyWord"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "keyWord": {
+            "type": "string"
+        }
+    }
+}

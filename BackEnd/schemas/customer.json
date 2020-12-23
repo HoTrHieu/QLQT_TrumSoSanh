@@ -1,0 +1,27 @@
+{
+    "required": [
+        "address_id",
+        "create_date",
+        "first_name",
+        "last_name",
+        "store_id"
+    ],
+    "additionalProperties": false,
+    "properties": {
+        "address_id": {
+          "type": "integer"
+        },
+        "create_date": {
+            "type": "string"
+        },
+        "first_name": {
+            "type": "string"
+        },
+        "last_name": {
+            "type": "string"
+        },
+        "store_id": {
+            "type": "integer"
+        }
+    }
+}

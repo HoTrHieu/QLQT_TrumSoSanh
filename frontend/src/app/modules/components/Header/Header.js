@@ -29,7 +29,7 @@ const Header = (props) => {
                                 <form className="js-focus-state">
                                 <label className="sr-only" htmlFor="searchproduct">Search</label>
                                 <div className="input-group">
-                                <input type="email" class="form-control py-2 pl-5 font-size-15 border-right-0 height-40 border-width-2 rounded-left-pill border-primary" name="email" id="searchproduct-item" placeholder="Tìm sản phẩm muốn so sánh giá" aria-label="Search for Products" aria-describedby="searchProduct1" required />
+                                <input type="email" className="form-control py-2 pl-5 font-size-15 border-right-0 height-40 border-width-2 rounded-left-pill border-primary" name="email" id="searchproduct-item" placeholder="Tìm sản phẩm muốn so sánh giá" aria-label="Search for Products" aria-describedby="searchProduct1" required />
                                     <div className="input-group-append">
                                         <button className="btn btn-primary height-40 py-2 px-3 rounded-right-pill" type="button" id="searchProduct1">
                                             <span className="ec ec-search font-size-24" />

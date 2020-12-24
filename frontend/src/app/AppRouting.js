@@ -7,7 +7,7 @@ const AppRouting = (props) => {
     return (
       <Switch>
         <Route exact path="/" component={Home} />
-        <Route path="/shop/compare.html" component={Compare} />
+        <Route exact path="/compare" component={Compare} />
       </Switch>
     );
   };

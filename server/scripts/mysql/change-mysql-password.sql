@@ -1,1 +1,1 @@
-ALTER USER 'root'@'localhost' IDENTIFIED BY '123456789';
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '123456789';

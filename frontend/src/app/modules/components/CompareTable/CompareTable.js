@@ -1,18 +1,22 @@
 import React from "react";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const CompareTable = (props) => {
   const renderProductImageRow = (data) => {
     return (
       <tr>
-        <th className="min-width-200">Product</th>
+        <th className="min-width-200">Sản phẩm</th>
         {data.map((product, index) => {
           return (
             <td key={index}>
               <Link to="#" className="product d-block">
                 <div className="product-compare-image">
                   <div className="d-flex mb-3">
-                    <img className="img-fluid mx-auto" src={product.image} alt="Description" />
+                    <img
+                      className="img-fluid mx-auto"
+                      src={product.image}
+                      alt="Description"
+                    />
                   </div>
                 </div>
                 <h3 className="product-item__title text-blue font-weight-bold mb-3">
@@ -36,7 +40,7 @@ const CompareTable = (props) => {
   const renderProductPriceRow = (data) => {
     return (
       <tr>
-        <th>Price</th>
+        <th>Giá</th>
         {data.map((product, index) => {
           return (
             <td key={index}>
@@ -51,7 +55,7 @@ const CompareTable = (props) => {
   const renderAvailabilityRow = (data) => {
     return (
       <tr>
-        <th>Availability</th>
+        <th>Có sẵn</th>
         {data.map((product, index) => {
           return (
             <td key={index}>
@@ -66,7 +70,7 @@ const CompareTable = (props) => {
   const renderDescriptionRow = (data) => {
     return (
       <tr>
-        <th>Description</th>
+        <th>Mô tả</th>
         {data.map((product, index) => {
           return (
             <td key={index}>
@@ -90,7 +94,7 @@ const CompareTable = (props) => {
     const { onClickAddToCart } = props;
     return (
       <tr>
-        <th>Add to cart</th>
+        <th>Thêm vào giỏ hàng</th>
         {data.map((product, index) => {
           return (
             <td key={index}>
@@ -103,7 +107,7 @@ const CompareTable = (props) => {
                     onClickAddToCart && onClickAddToCart(index, product);
                   }}
                 >
-                  Add to cart
+                  Thêm
                 </Link>
               </div>
             </td>
@@ -127,7 +131,7 @@ const CompareTable = (props) => {
   const renderWeightRow = (data) => {
     return (
       <tr>
-        <th>Weight</th>
+        <th>Trọng lượng</th>
         {data.map((product, index) => {
           return <td key={index}>{product.weight}</td>;
         })}
@@ -138,7 +142,7 @@ const CompareTable = (props) => {
   const renderColorRow = (data) => {
     return (
       <tr>
-        <th>color</th>
+        <th>Màu sắc</th>
         {data.map((product, index) => {
           return <td key={index}>{product.color}</td>;
         })}
@@ -150,7 +154,7 @@ const CompareTable = (props) => {
     const { onClickRemove } = props;
     return (
       <tr>
-        <th>Remove</th>
+        <th>Loại bỏ</th>
         {data.map((product, index) => {
           return (
             <td key={index} className="text-center">

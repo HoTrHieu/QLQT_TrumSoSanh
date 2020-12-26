@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 const Topbar = (props) => {
   const render = () => {
+    let accessToken= localStorage.getItem('accessToken');
     return (
       <div className="u-header-topbar py-2 d-none d-xl-block">
         <div className="container">
@@ -14,18 +15,17 @@ const Topbar = (props) => {
             </div>
             <div className="topbar-right ml-auto">
               <ul className="list-inline mb-0">
-                <li className="list-inline-item mr-0 u-header-topbar__nav-item u-header-topbar__nav-item-border">
-                  <a className="u-header-topbar__nav-link">
-                    <i className="ec ec-user mr-1" />
-                    <Link to="/login" className="text-gray-100">
-                      Đăng nhập
-                    </Link>
-                    <span className="text-gray-50">{' hoặc '}</span>
-                    <Link to="/register" className="text-gray-100">
-                      Đăng ký
-                    </Link>
-                  </a>
-                </li>
+                { accessToken === null 
+                                ? <li className="list-inline-item mr-0 u-header-topbar__nav-item u-header-topbar__nav-item-border"> 
+                                    <Link to="/login" className="u-header-topbar__nav-link"> Đăng Nhập </Link> 
+                                        <span className="text-gray-50"> hoặc </span> 
+                                    <Link to="/register" className="u-header-topbar__nav-link"> Đăng Ký </Link> 
+                                    </li>
+                                : <li className="list-inline-item mr-0 u-header-topbar__nav-item u-header-topbar__nav-item-border"> 
+                                    <i className="ec ec-user mr-1" /> 
+                                        <a href='/' onClick= { function() { localStorage.clear(); } }  className="u-header-topbar__nav-link" > Đăng xuất </a> 
+                                </li>
+                            }
               </ul>
             </div>
           </div>

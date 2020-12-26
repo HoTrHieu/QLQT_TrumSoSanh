@@ -1,7 +1,8 @@
 import { Controller, Post } from "@nestjs/common";
-import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiResponse, ApiTags } from "@nestjs/swagger";
+import { Public } from "src/common/decorators/public.decorator";
 import { StdResponse } from "src/common/dtos/std-response.dto";
-import { StdResponseCode } from "src/common/enums/StdResponseCode";
+import { Category } from "src/common/entities/category.entity";
 import { CrawlerService } from "./crawler.service";
 
 @ApiTags('Crawler')
@@ -15,27 +16,37 @@ export class CrawlerController {
   @ApiResponse({
     type: StdResponse
   })
-  @ApiBearerAuth()
+  @Public()
   runJob() {
     return this.crawlerService.runJob();
   }
 
-  @Post('/crawl-category')
+  @Post('/crawl-root-categories')
   @ApiResponse({
-    type: StdResponse
+    type: Category,
+    isArray: true
   })
-  @ApiBearerAuth()
-  async crawlCategory() {
-    const rootCategories = await this.crawlerService.crawlRootCategory();
-    return StdResponse.of(StdResponseCode.SUCCESS, rootCategories);
+  @Public()
+  crawlRootCategories() {
+    return this.crawlerService.crawlRootCategories();
   }
 
-  @Post('/crawl-brand')
+  @Post('/crawl-categories')
+  @ApiResponse({
+    type: Category,
+    isArray: true
+  })
+  @Public()
+  crawlCategory() {
+    return this.crawlerService.crawlCategories();
+  }
+
+  @Post('/crawl-brands')
   @ApiResponse({
     type: StdResponse
   })
-  @ApiBearerAuth()
+  @Public()
   crawlBrand() {
-    return this.crawlerService.crawlBrand();
+    return this.crawlerService.crawlBrands();
   }
 }

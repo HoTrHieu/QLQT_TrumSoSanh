@@ -12,7 +12,7 @@ import { EntityStatus } from './common/status.entity';
 
 export enum UserRole {
   ADMIN = 1,
-  COLLABORATOR = 2,
+  USER = 2,
 }
 
 @Entity({
@@ -40,7 +40,7 @@ export class User {
   @Column({
     type: 'enum',
     enum: UserRole,
-    default: UserRole.COLLABORATOR,
+    default: UserRole.USER,
   })
   role: UserRole;
 

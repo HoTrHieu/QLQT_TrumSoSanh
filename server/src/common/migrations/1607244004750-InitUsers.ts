@@ -16,9 +16,9 @@ export class InitUsers1607244004750 implements MigrationInterface {
         passwordHash,
       }),
       manager.create(User, {
-        userName: 'collaborator1',
-        displayName: 'Collaborator 1',
-        role: UserRole.COLLABORATOR,
+        userName: 'user1',
+        displayName: 'User 1',
+        role: UserRole.USER,
         status: EntityStatus.ACTIVE,
         passwordHash,
       }),

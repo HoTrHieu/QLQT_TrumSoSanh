@@ -16,8 +16,8 @@ module.exports = {
     return users[0];
   },
 
-  async singleByUserName(username) {
-    const users = await db('users').where('username', username);
+  async singleByEmail(email) {
+    const users = await db('users').where('email', email);
     if (users.length === 0) {
       return null;
     }

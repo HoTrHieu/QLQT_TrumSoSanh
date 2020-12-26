@@ -1,26 +1,22 @@
 import { Cluster } from 'puppeteer-cluster';
-
-export interface RootCategory {
-  href: string;
-  path: string;
-  name: string;
-}
+import { Category } from 'src/common/entities/category.entity';
+import { ExtractBuilder } from './extract-builder';
 
 export class RootCategoryExtractor {
-  static async extract(cluster: Cluster): Promise<RootCategory[]> {
+  static async extract(cluster: Cluster): Promise<Category[]> {
     await cluster.task(async ({ page, data: url }) => {
       await page.goto(url);
-      return page.evaluate(() => {
+      console.log('Start extract common categories');
+      const rawRootCategories = await page.evaluate(() => {
         const rootCategories = [];
         const ignorePaths = {
           'hang-quoc-te': true,
           'voucher-dich-vu': true,
-          '#': true
+          '#': true,
         };
-    
+
         document
-          .querySelector('ul[data-view-id="main_navigation"]')
-          .querySelectorAll('li[data-view-id="main_navigation_item"]>a')
+          .querySelectorAll('ul[data-view-id="main_navigation"] li>a')
           .forEach((el: any) => {
             const href = el.href.split('?')[0];
             const path = href.split('/')[3];
@@ -30,6 +26,9 @@ export class RootCategoryExtractor {
           });
         return rootCategories;
       });
+
+      console.log('Extract common categories done:', rawRootCategories.length);
+      return rawRootCategories.map(ExtractBuilder.buildExtractedCategory);
     });
 
     return cluster.execute('https://tiki.vn');

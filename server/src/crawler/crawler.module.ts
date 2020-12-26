@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { CategoryModule } from "src/category/category.module";
-import { PptrClusterService } from "src/pptr-cluster/pptr-cluster.service";
+import { PptrClusterModule } from "src/pptr-cluster/pptr-cluster.module";
 import { ProductModule } from "src/product/product.module";
 import { CrawlerController } from "./crawler.controller";
 import { CrawlerService } from "./crawler.service";
@@ -9,7 +9,7 @@ import { CrawlerService } from "./crawler.service";
   imports: [
     ProductModule,
     CategoryModule,
-    PptrClusterService
+    PptrClusterModule
   ],
   controllers: [CrawlerController],
   providers: [CrawlerService],

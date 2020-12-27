@@ -7,5 +7,6 @@
 ### type: $npm start
 
 # Front end: $cd frontend
+## type: $npm install sweetalert2
 ## type: $npm i
 ## type: $npm start

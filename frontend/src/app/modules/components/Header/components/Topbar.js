@@ -10,12 +10,12 @@ const Topbar = (props) => {
             <div className="container">
                 <div className="d-flex align-items-center">
                 <div className="topbar-left">
-                    <Link to="#" className="text-gray-110 font-size-13 hover-on-dark">Welcome to Trùm So Sánh</Link>
+                    <Link to="/" className="text-gray-110 font-size-13 hover-on-dark">Welcome to Trùm So Sánh</Link>
                 </div>
                 <div className="topbar-right ml-auto">
                     <ul className="list-inline mb-0">
                         <li className="list-inline-item mr-0 u-header-topbar__nav-item u-header-topbar__nav-item-border">
-                        <Link to="#" className="u-header-topbar__nav-link">
+                        <Link to="/login" className="u-header-topbar__nav-link">
                             <i className="ec ec-user mr-1" /> Register <span className="text-gray-50">or</span> Sign in
                         </Link>
                     </li>

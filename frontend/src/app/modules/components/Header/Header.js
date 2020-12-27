@@ -1,11 +1,19 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import * as React from "react";
+import React, {useEffect, useState} from "react";
 import { Link } from 'react-router-dom';
 import { Topbar, Menu, Sidebar, MobileItem } from './components';
+import { CategoryService } from './../../../core/services';
 
 const Header = (props) => {
+    const [listCategory, setListCategory] = useState();
+    useEffect(() => {
+        CategoryService.getAll().then(res => {
+            setListCategory(res.data);
+        })
+    },[]);
 
     const render = () => {
+        console.log('show:: ', listCategory)
         return (
             <header className="u-header u-header-left-aligned-nav">
                 <div className="u-header__section">

@@ -18,6 +18,7 @@ app.get('/', (req,res)=>{
 
 /////////////////use router///////////////////////
 app.use('/api/crawl', require('./routes/crawl.route'));
+app.use('/api/v1/category', require('./routes/category.route'));
 //////develop sau
 app.use('/api/customers', auth, require('./routes/customer.route'));
 app.use('/api/auth', require('./routes/auth.route'));

@@ -21,6 +21,7 @@ const Compare = (props) => {
   });
 
   const render = () => {
+    console.log("ahihi-props: ", props);
     return (
       <Layout>
         <Breadcrumb />

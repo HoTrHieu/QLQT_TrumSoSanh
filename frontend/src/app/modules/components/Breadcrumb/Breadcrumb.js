@@ -10,10 +10,10 @@ const Breadcrumb = (props) => {
             <nav aria-label="breadcrumb">
               <ol className="breadcrumb mb-3 flex-nowrap flex-xl-wrap overflow-auto overflow-xl-visble">
                 <li className="breadcrumb-item flex-shrink-0 flex-xl-shrink-1">
-                  <Link to="/">Home</Link>
+                  <Link to="/">Trang chủ</Link>
                 </li>
                 <li className="breadcrumb-item flex-shrink-0 flex-xl-shrink-1 active" aria-current="page">
-                  Compare
+                  So sánh
                 </li>
               </ol>
             </nav>

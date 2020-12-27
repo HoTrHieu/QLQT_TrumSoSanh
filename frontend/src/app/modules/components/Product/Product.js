@@ -121,7 +121,7 @@ const Product = (props) => {
                       <div className="product-item__footer">
                         <div className="border-top pt-2 flex-center-between flex-wrap">
                           <Link
-                            to={"../shop/compare.html"}
+                            to={"/compare"}
                             className="text-gray-6 font-size-13"
                             style={{ backgroundColor: "red" }}
                           >

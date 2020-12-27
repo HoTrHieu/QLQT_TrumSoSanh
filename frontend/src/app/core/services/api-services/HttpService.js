@@ -2,7 +2,11 @@ import axios from 'axios';
 
 const defaultConfig = {
     baseURL: process.env.REACT_APP_ROOT_API_URL || 'http://localhost:5000',
-    withCredentials: true
+    withCredentials: false,
+    headers: {
+        'Access-Control-Allow-Origin' : '*',
+        'Access-Control-Allow-Methods' : 'GET,POST,PUT,DEL'
+    }
 };
 
 const HttpService = axios.create(defaultConfig);

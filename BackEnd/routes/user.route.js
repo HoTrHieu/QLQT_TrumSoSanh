@@ -16,4 +16,11 @@ router.post('/', validate(userSchema), async function (req, res) {
   res.status(201).json(user);
 })
 
-module.exports = router;
+router.post('/checkEmail',async function (req, res) {
+  const user = await userModel.singleByEmail(req.body.email);
+  if (user == null) {
+    return res.status(204).end();
+  }
+  res.json(user);
+})
+module.exports = router;          

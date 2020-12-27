@@ -1,13 +1,75 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import AuthService from "../../../../core/services/api-services/AuthService";
+import Swal from  'sweetalert2'
 
-const Register = (props) => {
+export default class Register extends React.Component {
 
-  const render = () => {
+  state = {
+    email: '',
+    password: '',
+    confirmpassword: ''
+  }
+
+  handleChangeEmail = event => {
+    this.setState({
+      email: event.target.value
+    });
+  }
+  handleChangePassword = event => {
+    this.setState({
+      password: event.target.value
+    });
+  }
+  handleChangeConfirmPasswork = event => {
+    this.setState({
+      confirmpassword: event.target.value
+    });
+  }
+
+  handleSubmit = event =>  {
+    event.preventDefault();
+    const password = this.state.password;
+    const confirmpassword = this.state.confirmpassword;
+
+    if(password != confirmpassword) {
+      Swal.fire({
+        icon: 'error',
+        text: 'Mật khẩu xác nhận không chính xác !!!',
+      })
+    }
+    else {
+      const user = {
+        email: this.state.email,
+        password: this.state.password,
+      }
+      AuthService.checkExistEmail(user).then(res => {
+        if(res.status == 200) {
+          Swal.fire({
+            icon: 'error',
+            text: 'Email này đã tồn tại !!!',            
+          })
+        }
+        else {
+          AuthService.createUser(user).then(res => {
+            Swal.fire({
+              icon: 'success',
+              text: 'Tạo thành công',
+              html: 'Nhấn vào ' +
+                    '<a href="/login">đây</a> ' +
+                    'để đăng nhập !!!',
+            })
+          })
+        }
+      })
+    }
+  }
+
+  render() {
     return (
       <div className="u-stats-progress__info_login u-header-sidebar__content">
-        <form className="js-validate">
-          <div id="login" data-target-group="idForm" >
+        <form onSubmit={this.handleSubmit}>
+          <div data-target-group="idForm" >
             <header className="text-center mb-4">
               <img className="img-fluid" src="../../assets/img/logo/logo.png" alt="Image Description"  />
               <h2 className="h4 mb-0">So sánh và tìm giá rẻ nhất</h2>
@@ -21,7 +83,7 @@ const Register = (props) => {
                       <span className="fas fa-user" />
                     </span>
                   </div>
-                  <input type="password" className="form-control" name="password" id="signupPassword" placeholder="Password" aria-label="Password" aria-describedby="signupPasswordLabel" required data-msg="Your password is invalid. Please try again." data-error-class="u-has-error" data-success-class="u-has-success" />
+                  <input type="email" onChange={this.handleChangeEmail} className="form-control" placeholder="Email" required data-msg="Vui lòng nhập Email." data-error-class="u-has-error" data-success-class="u-has-success" />
                 </div>
               </div>
             </div>
@@ -34,7 +96,7 @@ const Register = (props) => {
                       <span className="fas fa-lock" />
                     </span>
                   </div>
-                  <input type="password" className="form-control" name="password" id="signinPassword" placeholder="Password" aria-label="Password" aria-describedby="signinPasswordLabel" required data-msg="Your password is invalid. Please try again." data-error-class="u-has-error" data-success-class="u-has-success" />
+                    <input type="password" onChange={this.handleChangePassword} className="form-control" placeholder="Password" required data-msg="Your password is invalid. Please try again." data-error-class="u-has-error" data-success-class="u-has-success" />
                 </div>
               </div>
             </div>
@@ -47,25 +109,23 @@ const Register = (props) => {
                         <span className="fas fa-key" />
                         </span>
                     </div>
-                    <input type="password" className="form-control" name="confirmPassword" id="signupConfirmPassword" placeholder="Confirm Password" aria-label="Confirm Password" aria-describedby="signupConfirmPasswordLabel" required data-msg="Password does not match the confirm password." data-error-class="u-has-error" data-success-class="u-has-success" />
+                      <input type="password" onChange={this.handleChangeConfirmPasswork} className="form-control" placeholder="Confirm Password" required data-msg="Password does not match the confirm password." data-error-class="u-has-error" data-success-class="u-has-success" />
                     </div>
                 </div>
             </div>
 
             <div className="mb-2">
-              <Link to="/">
-                <button type="submit" className="btn btn-block btn-sm btn-primary transition-3d-hover">
-                  Đăng Ký
-                </button>
-              </Link>
+              <button type="submit" className="btn btn-block btn-sm btn-primary transition-3d-hover">
+                Đăng Ký
+              </button>
             </div>
             <div className="text-center">
               <span className="text-dark">Bạn đã có tài khoản tại Trùm So Sánh ? </span>
               <Link to="/login">
-              <span className="text-danger">Đăng Nhập</span>
+                <span className="text-danger">Đăng Nhập</span>
               </Link>
             </div>
-            <div className="text-center">
+            {/* <div className="text-center">
               <span className="u-divider u-divider--xs u-divider--text mb-4">OR</span>
             </div>
             <div className="d-flex">
@@ -77,15 +137,10 @@ const Register = (props) => {
                 <span className="fab fa-google mr-1" />
                 Google
               </a>
-            </div>
+            </div> */}
           </div>
         </form>
       </div>
     );
   };
-
-  return render();
 };
-
-export default Register;
-

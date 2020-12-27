@@ -8,7 +8,7 @@ const router = express.Router();
 
 // login user
 router.post('/', async function (req, res) {
-  const user = await userModel.singleByUserName(req.body.username);
+  const user = await userModel.singleByEmail(req.body.email);
   if (user === null) {
     return res.json({
       authenticated: false

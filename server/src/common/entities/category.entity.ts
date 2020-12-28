@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
   ManyToMany,
   ManyToOne,
   OneToMany,
@@ -56,8 +57,9 @@ export class Category {
   @CreateDateColumn({ name: 'created_date' })
   createdDate: Date;
 
-  @ApiProperty()
+  @ApiProperty({ type: () => Brand, isArray: true })
   @ManyToMany(() => Brand, (brand) => brand.categories)
+  @JoinTable({ name: 'category_brands' })
   @Exclude()
   brands: Brand[];
 
@@ -67,10 +69,10 @@ export class Category {
   products: Product[];
 
   @ApiProperty()
-  @ManyToOne(() => Category, category => category.children)
+  @ManyToOne(() => Category, (category) => category.children)
   public parent: Category;
 
   @ApiProperty()
-  @OneToMany(() => Category, category => category.parent)
+  @OneToMany(() => Category, (category) => category.parent)
   public children: Category[];
 }

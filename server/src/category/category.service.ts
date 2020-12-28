@@ -1,24 +1,54 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Category } from "src/common/entities/category.entity";
-import { EntityStatus } from "src/common/entities/common/status.entity";
-import { Repository } from "typeorm";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Category } from 'src/common/entities/category.entity';
+import { EntityStatus } from 'src/common/entities/common/status.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class CategoryService {
   constructor(
     @InjectRepository(Category)
-    private categoryRepository: Repository<Category>
+    private categoryRepository: Repository<Category>,
   ) {}
 
   findAll() {
     return this.categoryRepository.find({
-      where: { status: EntityStatus.ACTIVE }
+      where: { status: EntityStatus.ACTIVE },
+      relations: ['children']
     });
   }
 
+  findRootCategories() {
+    return this.categoryRepository
+      .createQueryBuilder()
+      .where('parentId IS NULL')
+      .andWhere('status = :status', { status: EntityStatus.ACTIVE })
+      .getMany();
+  }
+
+  findNonRootCategories() {
+    return this.categoryRepository
+      .createQueryBuilder()
+      .where('parentId IS NOT NULL')
+      .andWhere('status = :status', { status: EntityStatus.ACTIVE })
+      .getMany();
+  }
+
+  findCategoriesWithBrands() {
+    return this.categoryRepository
+      .createQueryBuilder('c')
+      .leftJoinAndSelect('c.brands', 'b')
+      .where('c.parentId IS NOT NULL')
+      .andWhere('c.status = :status', { status: EntityStatus.ACTIVE })
+      .andWhere('b.status = :status', { status: EntityStatus.ACTIVE })
+      .getMany();
+  }
+
   findOneByName(name: string) {
-    return this.categoryRepository.findOne({ name });
+    return this.categoryRepository.findOne({
+      name,
+      status: EntityStatus.ACTIVE,
+    });
   }
 
   async addCategory(name: string) {
@@ -35,5 +65,12 @@ export class CategoryService {
       status,
     });
     return result.affected > 0;
+  }
+
+  saveAll(category: Category[]) {
+    if (category.length === 0) {
+      return [];
+    }
+    return this.categoryRepository.save(category);
   }
 }

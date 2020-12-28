@@ -1,12 +1,20 @@
 import { Cluster } from 'puppeteer-cluster';
 import { Category } from 'src/common/entities/category.entity';
 import { ExtractBuilder } from './extract-builder';
+import { CrawlerConstants } from '../common/cralwer.constants';
+import { Logger } from '@nestjs/common';
+import * as fs from 'fs';
 
 export class RootCategoryExtractor {
+  static readonly SAVE_PATH = CrawlerConstants.getSavePath(
+    'root_categories.json',
+  );
+  private static readonly logger = new Logger(RootCategoryExtractor.name);
+
   static async extract(cluster: Cluster): Promise<Category[]> {
     await cluster.task(async ({ page, data: url }) => {
+      RootCategoryExtractor.logger.debug('Start extract root categories');
       await page.goto(url);
-      console.log('Start extract common categories');
       const rawRootCategories = await page.evaluate(() => {
         const rootCategories = [];
         const ignorePaths = {
@@ -27,8 +35,18 @@ export class RootCategoryExtractor {
         return rootCategories;
       });
 
-      console.log('Extract common categories done:', rawRootCategories.length);
-      return rawRootCategories.map(ExtractBuilder.buildExtractedCategory);
+      RootCategoryExtractor.logger.debug(
+        'Extract root categories done: ' + rawRootCategories.length,
+      );
+      const rootCategories = rawRootCategories.map(
+        ExtractBuilder.buildExtractedCategory,
+      );
+      await fs.promises.writeFile(
+        RootCategoryExtractor.SAVE_PATH,
+        JSON.stringify(rootCategories),
+        'utf8',
+      );
+      return rootCategories;
     });
 
     return cluster.execute('https://tiki.vn');

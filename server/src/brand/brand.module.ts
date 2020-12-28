@@ -8,6 +8,6 @@ import { BrandService } from './brand.service';
   imports: [TypeOrmModule.forFeature([Brand]), CacheModule.register()],
   controllers: [BrandController],
   providers: [BrandService],
-  exports: [BrandService]
+  exports: [BrandService],
 })
 export class BrandModule {}

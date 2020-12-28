@@ -3,8 +3,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 export function useSwagger(app: INestApplication) {
   const options = new DocumentBuilder()
-    .setTitle('Anti-Plagiarism CMS')
-    .setDescription('Anti-Plagiarism CMS API Document')
+    .setTitle('TrumSoSanh')
+    .setDescription('TrumSoSanh API Document')
     .setVersion('1.0')
     .addBearerAuth()
     .build();

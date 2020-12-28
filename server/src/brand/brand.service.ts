@@ -1,20 +1,24 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Brand } from "src/common/entities/brand.entity";
-import { EntityStatus } from "src/common/entities/common/status.entity";
-import { Repository } from "typeorm";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { SearchRequest } from 'src/common/dtos/search-request.dto';
+import { Brand } from 'src/common/entities/brand.entity';
+import { EntityStatus } from 'src/common/entities/common/status.entity';
+import { PagingUtil } from 'src/common/utils/paging.util';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class BrandService {
   constructor(
     @InjectRepository(Brand)
-    private brandRepository: Repository<Brand>
+    private brandRepository: Repository<Brand>,
   ) {}
 
-  findAll() {
-    return this.brandRepository.find({
-      where: { status: EntityStatus.ACTIVE }
-    });
+  search(request: SearchRequest) {
+    const qb = this.brandRepository.createQueryBuilder('b').where('status = :status', { status: EntityStatus.ACTIVE });
+    if (request.isSearchTermExists) {
+      qb.andWhere(`b.name LIKE '%${request.searchTerm}%'`);
+    }
+    return PagingUtil.paginateByQb(qb, request);
   }
 
   findOneByName(name: string) {
@@ -35,5 +39,12 @@ export class BrandService {
       status,
     });
     return result.affected > 0;
+  }
+
+  saveAll(brands: Brand[]) {
+    if (brands.length === 0) {
+      return [];
+    }
+    return this.brandRepository.save(brands);
   }
 }

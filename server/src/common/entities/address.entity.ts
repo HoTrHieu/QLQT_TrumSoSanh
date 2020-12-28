@@ -1,22 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Exclude } from 'class-transformer';
 import {
   Column,
   CreateDateColumn,
   Entity,
   ManyToMany,
-  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Category } from './category.entity';
 import { EntityStatus } from './common/status.entity';
-import { Product } from './product.entity';
+import { Shop } from './shop.entity';
 
 @Entity({
-  name: 'brands',
+  name: 'addresses',
 })
-export class Brand {
+export class Address {
   @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
@@ -28,20 +25,6 @@ export class Brand {
   @ApiProperty()
   @Column('varchar', { length: 255 })
   slug: string;
-
-  @ApiProperty()
-  @Column('varchar', { length: 1000, nullable: true })
-  imageSource: string;
-
-  @ApiProperty()
-  @Column('varchar', { length: 255 })
-  @Exclude()
-  exHref: string;
-
-  @ApiProperty()
-  @Column('varchar', { length: 255 })
-  @Exclude()
-  exBrandId: string;
 
   @ApiProperty()
   @Column({
@@ -59,13 +42,7 @@ export class Brand {
   @CreateDateColumn({ name: 'created_date' })
   createdDate: Date;
 
-  @ApiProperty({ type: () => Category, isArray: true })
-  @ManyToMany(() => Category, (category) => category.brands)
-  @Exclude()
-  categories: Category[];
-
-  @ApiProperty()
-  @OneToMany(() => Product, (product) => product.brand)
-  @Exclude()
-  products: Product[];
+  @ApiProperty({ type: () => Shop, isArray: true })
+  @ManyToMany(() => Shop, (shop) => shop.addresses)
+  shops: Shop[];
 }

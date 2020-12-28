@@ -5,7 +5,7 @@ import { EntityStatus } from 'src/common/entities/common/status.entity';
 import { User, UserRole } from 'src/common/entities/user.entity';
 import { BcryptUtil } from 'src/common/utils/bcrypt.util';
 import { PagingUtil } from 'src/common/utils/paging.util';
-import { Like, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { AddUserRequest } from './dto/add-user-request.dto';
 
 @Injectable()
@@ -16,19 +16,15 @@ export class UserService {
   ) {}
 
   searchUser(request: SearchRequest) {
-    const usernameCondition: any = {};
-    const displayNameCondition: any = {};
-    const andConditions = { status: EntityStatus.ACTIVE };
+    const qb = this.userRepository
+      .createQueryBuilder('u')
+      .where('u.status = :status', { status: EntityStatus.ACTIVE });
     if (request.isSearchTermExists) {
-      usernameCondition.userName = Like(`%${request.searchTerm}%`);
-      displayNameCondition.displayName = Like(`%${request.searchTerm}%`);
+      qb.andWhere(
+        `p.userName LIKE '%${request.searchTerm}%' OR p.displayName LIKE '%${request.searchTerm}%'`,
+      );
     }
-    return PagingUtil.paginate(this.userRepository, request, {
-      where: [
-        { ...usernameCondition, ...andConditions },
-        { ...displayNameCondition, ...andConditions },
-      ],
-    });
+    return PagingUtil.paginateByQb(qb, request);
   }
 
   findOneById(id: number) {

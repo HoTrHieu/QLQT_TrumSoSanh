@@ -1,6 +1,10 @@
 import { Cluster } from 'puppeteer-cluster';
 import { Brand } from 'src/common/entities/brand.entity';
 import { ExtractBuilder } from './extract-builder';
+import * as fs from 'fs';
+import { CrawlerConstants } from '../common/cralwer.constants';
+import { Logger } from '@nestjs/common';
+import { Category } from 'src/common/entities/category.entity';
 
 const isBooks = {
   'sach-tieng-anh': true,
@@ -8,21 +12,24 @@ const isBooks = {
 };
 
 export class BrandExtractor {
+  static readonly SAVE_PATH = CrawlerConstants.getSavePath('brands.json');
+  private static readonly logger = new Logger(BrandExtractor.name);
+
   static async extract(
     cluster: Cluster,
-    categories: Brand[],
+    categories: Category[],
   ): Promise<Brand[]> {
     let doneCount = 0;
-    const brands: Brand[] = [];
+    let brands: Brand[] = [];
     const categoriesMap = new Map();
 
     await cluster.task(async ({ page, data }) => {
-      const category: Brand = data;
+      const category: Category = data;
+      BrandExtractor.logger.debug('Start extract brands: ' + category.exHref);
       await page.goto(category.exHref, {
         timeout: 0,
       });
 
-      console.log('Start extract brands:', category.exHref);
       const rawBrands = await page.evaluate((isBook) => {
         const brands = [];
         let els = null;
@@ -54,8 +61,11 @@ export class BrandExtractor {
         try {
           if (!els) {
             els = document
-              .querySelector('[class*="SideBar__Root"]')
-              .querySelector('div.block:nth-child(7)')
+              .querySelector(
+                `[class*="SideBar__Root"] [data-view-label="${
+                  isBook ? 'Công ty phát hành' : 'Thương hiệu'
+                }"]`,
+              )
               .querySelectorAll('div.list.collapsed>a');
           }
         } catch (err) {
@@ -71,28 +81,35 @@ export class BrandExtractor {
               el.removeChild(span);
             }
             const href = el.href.split('?')[0];
-            const path = href.split('/')[5];
-            brands.push({ href, path, name: el.innerText.trim() });
+            const paramName = isBook ? 'publisher_vn' : 'brand';
+            const brandId = new URL(el.href).searchParams.get(paramName);
+            brands.push({
+              href,
+              brandId: paramName + '=' + brandId,
+              name: el.innerText.trim(),
+            });
           });
         }
 
         return brands;
       }, isBooks[category.exPath]);
 
-      console.log(
-        `${++doneCount}/${categories.length}. Extract brands done:`,
-        category.exHref,
-        rawBrands.length,
+      BrandExtractor.logger.debug(
+        `${++doneCount}/${categories.length}. Extract brands done: ${
+          category.exHref
+        } -> ${rawBrands.length}`,
       );
-      
+
       if (rawBrands.length === 0) {
         throw new Error('Empty extracted brands at ' + category.exHref);
       } else {
-        brands.push(
+        brands = brands.concat(
           rawBrands.map((rawBrand) => {
             const brand = ExtractBuilder.buildExtractedBrand(rawBrand);
             const categories: any = categoriesMap.get(brand.slug) || [];
-            categoriesMap.set(brand.slug, [...categories, category]);
+            if (!categories.includes(category.id)) {
+              categoriesMap.set(brand.slug, [...categories, category.id]);
+            }
             return brand;
           }),
         );
@@ -106,10 +123,22 @@ export class BrandExtractor {
     await cluster.idle();
     await cluster.close();
 
+    BrandExtractor.logger.debug('All extract brand processes done!');
+    const distinctBrands: Brand[] = [];
+    const existsBrand = new Map();
     brands.forEach((brand) => {
-      brand.categories = categoriesMap.get(brand.slug);
-      return brand;
+      if (!existsBrand.has(brand.slug)) {
+        brand.categories = categoriesMap.get(brand.slug).map((id) => ({ id }));
+        existsBrand.set(brand.slug, true);
+        distinctBrands.push(brand);
+      }
     });
+
+    await fs.promises.writeFile(
+      BrandExtractor.SAVE_PATH,
+      JSON.stringify(distinctBrands),
+      'utf8',
+    );
 
     return brands;
   }

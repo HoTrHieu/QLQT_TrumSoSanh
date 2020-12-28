@@ -1,47 +1,44 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Exclude } from 'class-transformer';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
   ManyToMany,
-  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Category } from './category.entity';
+import { Address } from './address.entity';
 import { EntityStatus } from './common/status.entity';
 import { Product } from './product.entity';
 
 @Entity({
-  name: 'brands',
+  name: 'shops',
 })
-export class Brand {
+export class Shop {
   @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
 
   @ApiProperty()
-  @Column('varchar', { length: 255 })
+  @Column('varchar', { length: 1000 })
   name: string;
 
   @ApiProperty()
-  @Column('varchar', { length: 255 })
+  @Column('varchar', { length: 1000 })
   slug: string;
 
   @ApiProperty()
-  @Column('varchar', { length: 1000, nullable: true })
+  @Column('bigint', { nullable: true })
+  price: number;
+
+  @ApiProperty()
+  @Column('float', { nullable: true })
+  discount: number;
+
+  @ApiProperty()
+  @Column('varchar', { length: 1000 })
   imageSource: string;
-
-  @ApiProperty()
-  @Column('varchar', { length: 255 })
-  @Exclude()
-  exHref: string;
-
-  @ApiProperty()
-  @Column('varchar', { length: 255 })
-  @Exclude()
-  exBrandId: string;
 
   @ApiProperty()
   @Column({
@@ -59,13 +56,12 @@ export class Brand {
   @CreateDateColumn({ name: 'created_date' })
   createdDate: Date;
 
-  @ApiProperty({ type: () => Category, isArray: true })
-  @ManyToMany(() => Category, (category) => category.brands)
-  @Exclude()
-  categories: Category[];
+  @ApiProperty({ type: () => Address, isArray: true })
+  @ManyToMany(() => Address, (address) => address.shops)
+  @JoinTable({ name: 'shop_addresses' })
+  addresses: Address[];
 
-  @ApiProperty()
-  @OneToMany(() => Product, (product) => product.brand)
-  @Exclude()
+  @ApiProperty({ type: () => Product, isArray: true })
+  @ManyToMany(() => Product, (product) => product.shops)
   products: Product[];
 }

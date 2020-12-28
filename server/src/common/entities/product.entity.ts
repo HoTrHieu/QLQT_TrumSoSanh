@@ -1,11 +1,21 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { Brand } from "./brand.entity";
-import { Category } from "./category.entity";
-import { EntityStatus } from "./common/status.entity";
+import { ApiProperty } from '@nestjs/swagger';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { Brand } from './brand.entity';
+import { Category } from './category.entity';
+import { EntityStatus } from './common/status.entity';
+import { Shop } from './shop.entity';
 
 @Entity({
-  name: "products"
+  name: 'products',
 })
 export class Product {
   @ApiProperty()
@@ -21,19 +31,11 @@ export class Product {
   slug: string;
 
   @ApiProperty()
-  @Column('bigint')
-  price: number;
-
-  @ApiProperty()
-  @Column('float')
-  discount: number;
-
-  @ApiProperty()
-  @Column('simple-array', { name: 'image_sources' })
+  @Column('simple-array', { name: 'image_sources', nullable: true })
   imageSources: string[];
 
   @ApiProperty()
-  @Column('varchar', { name: "root_url", length: 1000 })
+  @Column('varchar', { name: 'root_url', length: 1000 })
   rootUrl: number;
 
   @ApiProperty()
@@ -53,10 +55,15 @@ export class Product {
   createdDate: Date;
 
   @ApiProperty({ type: () => Category })
-  @ManyToOne(() => Category, category => category.products)
+  @ManyToOne(() => Category, (category) => category.products)
   category: Category;
 
   @ApiProperty({ type: () => Brand })
-  @ManyToOne(() => Brand, brand => brand.products)
+  @ManyToOne(() => Brand, (brand) => brand.products)
   brand: Brand;
+
+  @ApiProperty({ type: () => Shop, isArray: true })
+  @ManyToMany(() => Shop, (shop) => shop.products)
+  @JoinTable({ name: 'product_shops' })
+  shops: Shop[];
 }

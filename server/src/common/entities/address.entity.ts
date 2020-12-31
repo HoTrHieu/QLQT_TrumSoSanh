@@ -3,12 +3,10 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { EntityStatus } from './common/status.entity';
-import { Shop } from './shop.entity';
 
 @Entity({
   name: 'addresses',
@@ -41,8 +39,4 @@ export class Address {
   @ApiProperty()
   @CreateDateColumn({ name: 'created_date' })
   createdDate: Date;
-
-  @ApiProperty({ type: () => Shop, isArray: true })
-  @ManyToMany(() => Shop, (shop) => shop.addresses)
-  shops: Shop[];
 }

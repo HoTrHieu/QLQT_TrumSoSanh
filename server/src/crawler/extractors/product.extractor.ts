@@ -1,21 +1,22 @@
 import { Logger } from '@nestjs/common';
 import { Cluster } from 'puppeteer-cluster';
-import { Category } from 'src/common/entities/category.entity';
 import { CrawlerConstants } from '../common/cralwer.constants';
 import * as fs from 'fs';
 import * as path from 'path';
 import { ExtractBuilder } from './extract-builder';
+import { Brand } from 'src/common/entities/brand.entity';
 
 export class ProductExtractor {
   private static readonly logger = new Logger(ProductExtractor.name);
   static readonly SAVE_DIR = CrawlerConstants.getSavePath('products');
-  static async extract(cluster: Cluster, categories: Category[]) {
+  static async extract(cluster: Cluster, brands: Brand[]) {
     let jobCount = 0;
     await cluster.task(async ({ page, data }) => {
       const jobId = data.jobId;
       const href = data.href + '&page=' + data.page;
-      const fileName = `${data.categoryId}_${data.brandId}.${data.page}.json`;
-      if (fs.existsSync(fileName)) {
+      const fileName = `${data.brandId}.${data.page}.json`;
+      const filePath = path.resolve(ProductExtractor.SAVE_DIR, fileName);
+      if (fs.existsSync(filePath)) {
         ProductExtractor.logger.debug(
           `${jobId}. Skip extract products: ${href}`,
         );
@@ -51,11 +52,10 @@ export class ProductExtractor {
       );
       if (rawProducts.length === 0) {
         ProductExtractor.logger.debug(`${jobId}. Reached last page: ${href}`);
+        await fs.promises.writeFile(filePath, JSON.stringify([]));
       } else {
-        const filePath = path.resolve(ProductExtractor.SAVE_DIR, fileName);
         const products = rawProducts.map((rawProduct) => {
           const product = ExtractBuilder.buildExtractedProduct(rawProduct);
-          product.category = { id: data.categoryId } as any;
           product.brand = { id: data.brandId } as any;
           return product;
         });
@@ -67,15 +67,12 @@ export class ProductExtractor {
       }
     });
 
-    categories.forEach((category) => {
-      category.brands.forEach((brand) => {
-        cluster.queue({
-          jobId: ++jobCount,
-          categoryId: category.id,
-          brandId: brand.id,
-          href: brand.exHref + '?' + brand.exBrandId,
-          page: 1,
-        });
+    brands.forEach((brand) => {
+      cluster.queue({
+        jobId: ++jobCount,
+        brandId: brand.id,
+        href: brand.exHref + '?' + brand.exBrandId,
+        page: 1,
       });
     });
 

@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { EntityStatus } from 'src/common/entities/common/status.entity';
 import { Product } from 'src/common/entities/product.entity';
 import { PagingUtil } from 'src/common/utils/paging.util';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { SearchProductRequest } from './dto/search-product-request.dto';
 
 @Injectable()
@@ -34,6 +34,15 @@ export class ProductService {
     return this.productRepository.findOne({
       slug,
       status: EntityStatus.ACTIVE,
+    });
+  }
+
+  findBySlugs(slugs: string[]) {
+    return this.productRepository.find({
+      select: ['id', 'slug'],
+      where: {
+        slug: In(slugs)
+      }
     });
   }
 

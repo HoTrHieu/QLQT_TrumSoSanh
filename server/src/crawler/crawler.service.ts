@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CategoryService } from 'src/category/category.service';
 import { StdResponse } from 'src/common/dtos/std-response.dto';
 import { StdResponseCode } from 'src/common/enums/StdResponseCode';
@@ -16,6 +16,8 @@ import { Product } from 'src/common/entities/product.entity';
 import { Connection } from 'typeorm';
 import { Brand } from 'src/common/entities/brand.entity';
 import { Category } from 'src/common/entities/category.entity';
+import { ShopExtractor } from './extractors/shop.extractor';
+import moment from 'moment';
 
 @Injectable()
 export class CrawlerService {
@@ -67,14 +69,29 @@ export class CrawlerService {
   }
 
   async crawlProducts() {
-    const categories = await this.categoryService.findCategoriesWithBrands();
+    const brands = await this.brandService.findAll();
     return this.pptrClusterService.useCluster(
       {
         taskName: 'Extract products',
         maxConcurrency: 8,
         retryLimit: 3,
       },
-      async (cluster) => ProductExtractor.extract(cluster, categories),
+      (cluster) => ProductExtractor.extract(cluster, brands),
+    );
+  }
+
+  async crawlShops(productId: number, page: number) {
+    const product = await this.productService.findOneById(productId);
+    if (!product) {
+      throw new NotFoundException();
+    }
+    return this.pptrClusterService.useCluster(
+      {
+        taskName: 'Extract shops',
+        maxConcurrency: 2,
+        retryLimit: 3,
+      },
+      (cluster) => ShopExtractor.extract(cluster, product, page),
     );
   }
 
@@ -100,57 +117,112 @@ export class CrawlerService {
   }
 
   async saveProducts() {
-    const savedProductsPath = CrawlerConstants.getSavePath(
-      'saved_products.json',
-    );
-    const savedProducts = JSON.parse(
-      await fs.promises.readFile(savedProductsPath, 'utf8'),
-    );
     const productFiles = await fs.promises.readdir(ProductExtractor.SAVE_DIR, {
       withFileTypes: true,
     });
     const self = this;
     await self.connection.transaction(async (manager) => {
-      let skipped = 0;
       let jobId = 0;
+      let processed = {};
+      let startTime = moment();
       for (const productFile of productFiles) {
         jobId++;
-        let isSkip = false;
-        if (!!savedProducts[productFile.name]) {
-          skipped++;
-          isSkip = true;
-        }
-        if (!isSkip) {
-          const filePath = path.resolve(
-            ProductExtractor.SAVE_DIR,
-            productFile.name,
+        const filePath = path.resolve(
+          ProductExtractor.SAVE_DIR,
+          productFile.name,
+        );
+        let products: any = [];
+        try {
+          products = JSON.parse(await fs.promises.readFile(filePath, 'utf8'));
+        } catch (err) {
+          self.logger.error(
+            `${jobId}/${productFiles.length}. Error on: ${productFile.name}, message: ${err.message}`,
           );
-          let products: any = [];
-          try {
-            products = JSON.parse(await fs.promises.readFile(filePath, 'utf8'));
-          } catch (err) {
-            self.logger.error(
-              `${jobId}. Error on: ${productFile.name}, message: ${err.message}`,
-            );
-            continue;
-          }
+          continue;
+        }
 
-          self.logger.debug(
-            `${jobId}. Start save products: ${productFile.name} -> ${products.length}`,
-          );
-          await manager.save(Product, products);
-          self.logger.debug(
-            `${jobId}. Save products on database done: ${filePath}`,
-          );
-          savedProducts[productFile.name] = true;
-        } else {
-          self.logger.debug(`${jobId}. Skip products: ${productFile.name}`);
+        if (products.length === 0) {
+          continue;
         }
+
+        self.logger.debug(
+          `${jobId}/${productFiles.length}. Start save products: ${productFile.name} -> ${products.length}`,
+        );
+
+        products = products.filter((p) => {
+          if (p.slug in processed) {
+            return false;
+          }
+          processed[p.slug] = true;
+          return true;
+        });
+
+        const queryResult = await this.productService.findBySlugs(
+          products.map((p) => p.slug),
+        );
+        const idMap = queryResult.reduce((obj, curr) => {
+          obj[curr.slug] = curr.id;
+          return obj;
+        }, {});
+
+        // set exists id
+        products.forEach((p) => {
+          if (p.slug in idMap) {
+            p.id = idMap[p.slug].id;
+          }
+        });
+
+        await manager.save(Product, products);
+        self.logger.debug(
+          `${jobId}/${productFiles.length}. Save products on database done: ${filePath}`,
+        );
       }
       self.logger.debug(
-        `Save all products on database done, skipped: ${skipped}`,
+        `Save all products on database done (${Math.round(moment.duration(moment().diff(startTime)).asMinutes())}m)`,
       );
     });
-    await fs.promises.writeFile(savedProductsPath, JSON.stringify(savedProducts));
+  }
+
+  async saveDuplicatedProducts() {
+    const productFiles = await fs.promises.readdir(ProductExtractor.SAVE_DIR, {
+      withFileTypes: true,
+    });
+    let duplicatedProducts = {};
+    for (const productFile of productFiles) {
+      try {
+        const filePath = path.resolve(
+          ProductExtractor.SAVE_DIR,
+          productFile.name,
+        );
+        const products = JSON.parse(
+          await fs.promises.readFile(filePath, 'utf8'),
+        );
+        products.forEach((p) => {
+          if (p.slug in duplicatedProducts) {
+            duplicatedProducts[p.slug].push(p);
+          } else {
+            duplicatedProducts[p.slug] = [p];
+          }
+        });
+      } catch (err) {
+        console.error(
+          `Process product file failed: ${productFile.name}, error: ${err.message}`,
+        );
+      }
+    }
+
+    duplicatedProducts = Object.keys(duplicatedProducts)
+      .filter((key) => duplicatedProducts[key].length > 1)
+      .reduce((result, key) => {
+        result[key] = duplicatedProducts[key];
+        return result;
+      }, {});
+
+    const savePath = CrawlerConstants.getSavePath('duplicated_products.json');
+    await fs.promises.writeFile(
+      savePath,
+      JSON.stringify(duplicatedProducts),
+      'utf8',
+    );
   }
 }

@@ -21,6 +21,12 @@ export class BrandService {
     return PagingUtil.paginateByQb(qb, request);
   }
 
+  findAll() {
+    return this.brandRepository.find({
+      status: EntityStatus.ACTIVE
+    });
+  }
+
   findOneByName(name: string) {
     return this.brandRepository.findOne({ name });
   }

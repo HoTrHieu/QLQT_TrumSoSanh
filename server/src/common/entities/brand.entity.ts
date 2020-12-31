@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -26,6 +27,7 @@ export class Brand {
   name: string;
 
   @ApiProperty()
+  @Index({ unique: true })
   @Column('varchar', { length: 255 })
   slug: string;
 

@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   JoinTable,
   ManyToMany,
   ManyToOne,
@@ -28,6 +29,7 @@ export class Category {
   name: string;
 
   @ApiProperty()
+  @Index({ unique: true })
   @Column('varchar', { length: 255 })
   slug: string;
 
@@ -62,12 +64,7 @@ export class Category {
   @JoinTable({ name: 'category_brands' })
   @Exclude()
   brands: Brand[];
-
-  @ApiProperty()
-  @OneToMany(() => Product, (product) => product.category)
-  @Exclude()
-  products: Product[];
-
+  
   @ApiProperty()
   @ManyToOne(() => Category, (category) => category.children)
   public parent: Category;

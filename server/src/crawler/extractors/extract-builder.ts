@@ -1,8 +1,8 @@
 import * as slugify from 'slug';
-import * as cryptoRandomString from 'crypto-random-string';
 import { Brand } from 'src/common/entities/brand.entity';
 import { Category } from 'src/common/entities/category.entity';
 import { Product } from 'src/common/entities/product.entity';
+import { CrawlShopResponse } from '../dtos/crawl-shop-response.dto';
 
 export class ExtractBuilder {
   static buildExtractedBrand(rawBrand: any) {
@@ -26,11 +26,20 @@ export class ExtractBuilder {
   static buildExtractedProduct(rawProduct: any) {
     const product = new Product();
     product.name = rawProduct.name;
-    product.slug =
-      slugify(rawProduct.name) +
-      cryptoRandomString({ length: 10, type: 'url-safe' });
+    product.slug = slugify(rawProduct.name);
     product.rootUrl = rawProduct.rootUrl;
     product.imageSources = rawProduct.imageSources;
     return product;
+  }
+
+  static buildExtractedShop(rawShop: any) {
+    const shop = new CrawlShopResponse();
+    shop.name = rawShop.name;
+    shop.price = rawShop.price;
+    shop.url = rawShop.url;
+    shop.title = rawShop.title;
+    shop.description = rawShop.description;
+    shop.imageSource = rawShop.imageSource;
+    return shop;
   }
 }

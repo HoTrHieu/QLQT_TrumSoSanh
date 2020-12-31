@@ -34,16 +34,6 @@ export class CategoryService {
       .getMany();
   }
 
-  findCategoriesWithBrands() {
-    return this.categoryRepository
-      .createQueryBuilder('c')
-      .leftJoinAndSelect('c.brands', 'b')
-      .where('c.parentId IS NOT NULL')
-      .andWhere('c.status = :status', { status: EntityStatus.ACTIVE })
-      .andWhere('b.status = :status', { status: EntityStatus.ACTIVE })
-      .getMany();
-  }
-
   findOneByName(name: string) {
     return this.categoryRepository.findOne({
       name,

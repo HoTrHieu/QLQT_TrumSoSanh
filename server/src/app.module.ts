@@ -13,7 +13,6 @@ import { ProductModule } from './product/product.module';
 import { CategoryModule } from './category/category.module';
 import { CrawlerModule } from './crawler/crawler.module';
 import { AddressModule } from './address/address.module';
-import { ShopModule } from './shop/shop.module';
 
 @Module({
   imports: [
@@ -30,8 +29,7 @@ import { ShopModule } from './shop/shop.module';
     ProductModule,
     CategoryModule,
     CrawlerModule,
-    AddressModule,
-    ShopModule
+    AddressModule
   ],
   providers: [
     {

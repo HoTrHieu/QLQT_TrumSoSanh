@@ -3,16 +3,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinTable,
-  ManyToMany,
+  Index,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Brand } from './brand.entity';
-import { Category } from './category.entity';
 import { EntityStatus } from './common/status.entity';
-import { Shop } from './shop.entity';
 
 @Entity({
   name: 'products',
@@ -27,7 +24,8 @@ export class Product {
   name: string;
 
   @ApiProperty()
-  @Column('varchar', { length: 1000 })
+  @Index({ unique: true })
+  @Column('varchar', { length: 500 })
   slug: string;
 
   @ApiProperty()
@@ -54,16 +52,7 @@ export class Product {
   @CreateDateColumn({ name: 'created_date' })
   createdDate: Date;
 
-  @ApiProperty({ type: () => Category })
-  @ManyToOne(() => Category, (category) => category.products)
-  category: Category;
-
   @ApiProperty({ type: () => Brand })
   @ManyToOne(() => Brand, (brand) => brand.products)
   brand: Brand;
-
-  @ApiProperty({ type: () => Shop, isArray: true })
-  @ManyToMany(() => Shop, (shop) => shop.products)
-  @JoinTable({ name: 'product_shops' })
-  shops: Shop[];
 }

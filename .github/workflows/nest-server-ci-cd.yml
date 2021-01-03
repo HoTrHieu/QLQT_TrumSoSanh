@@ -37,7 +37,7 @@ jobs:
         script: |
           su - deployer
           cd ~/projects/QLQT_TrumSoSanh
-          git pull origin nest-server
+          git pull origin deploy-nest-server
           cd server
           ./build-server
           pm2 restart 0

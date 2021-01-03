@@ -5,7 +5,7 @@ name: Nest server CI/CD
 
 on:
   push:
-    branches: [ nest-server-ci-cd ]
+    branches: [ deploy-nest-server ]
 
 jobs:
   test:

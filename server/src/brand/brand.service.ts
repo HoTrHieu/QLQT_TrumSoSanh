@@ -32,7 +32,7 @@ export class BrandService {
   findAllByCategoryId(categoryId: number) {
     return this.brandRepository
       .createQueryBuilder('b')
-      .innerJoin('b.categories', 'c', 'c.categroyId = :categoryId', {
+      .innerJoin('b.categories', 'c', 'c.id = :categoryId', {
         categoryId,
       })
       .where('b.status = :status', { status: EntityStatus.ACTIVE })

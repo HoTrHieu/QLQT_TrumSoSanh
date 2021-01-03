@@ -2,6 +2,11 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "assets": [
-    "**/config.*.json"
+    {
+      "include": "**/config.*.json"
+    },
+    {
+      "exclude": ["**/crawled-data/products", "**/crawled-data/shops"]
+    }
   ]
 }

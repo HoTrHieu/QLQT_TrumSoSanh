@@ -35,6 +35,7 @@ jobs:
         key: {{ secrets.SSH_KEY }}
         port: {{ secrets.SSH_PORT }}
         script: |
+          su - deployer
           cd ~/projects/QLQT_TrumSoSanh
           git pull origin nest-server
           cd server

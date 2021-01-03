@@ -12,7 +12,6 @@ import { Public } from 'src/common/decorators/public.decorator';
 import { Role } from 'src/common/decorators/role.decorator';
 import { BooleanResponse } from 'src/common/dtos/boolean-response.dto';
 import { UpdateStatusRequest } from 'src/common/dtos/update-status-request.dto';
-import { Product } from 'src/common/entities/product.entity';
 import { UserRole } from 'src/common/entities/user.entity';
 import { ProductResponse } from './dto/product-response.dto';
 import { SearchProductRequest } from './dto/search-product-request.dto';

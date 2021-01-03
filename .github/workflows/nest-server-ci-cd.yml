@@ -26,7 +26,7 @@ jobs:
         npm run test
   deploy:
     needs: [test]
-    runs-on: unbuntu-latest
+    runs-on: ubuntu-latest
     steps:
     - name: Deploy nest server
       uses: appleboy/ssh-action@master

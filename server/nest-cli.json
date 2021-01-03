@@ -6,7 +6,11 @@
       "include": "**/config.*.json"
     },
     {
-      "exclude": ["**/crawled-data/products", "**/crawled-data/shops"]
+      "exclude": [
+        "**/crawled-data/products",
+        "**/crawled-data/shops",
+        "**/crawled-data/*.rar"
+      ]
     }
   ]
 }

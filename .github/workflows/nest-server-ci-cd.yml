@@ -22,7 +22,7 @@ jobs:
     - name: run install & test
       run: |
         npm install
-        npm test
+        npm run test
   deploy:
     needs: [test]
     runs-on: unbuntu-latest

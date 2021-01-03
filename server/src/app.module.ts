@@ -21,7 +21,7 @@ import { AddressModule } from './address/address.module';
       isGlobal: true,
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'webapp'),
+      rootPath: join(__dirname, '..', 'frontend'),
     }),
     mysqlModule,
     UserModule,

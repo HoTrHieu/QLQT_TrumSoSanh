@@ -64,7 +64,12 @@ export class Category {
   @JoinTable({ name: 'category_brands' })
   @Exclude()
   brands: Brand[];
-  
+
+  @ApiProperty({ type: () => Product, isArray: true })
+  @OneToMany(() => Product, (product) => product.category)
+  @Exclude()
+  products: Product[];
+
   @ApiProperty()
   @ManyToOne(() => Category, (category) => category.children)
   public parent: Category;

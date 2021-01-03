@@ -32,18 +32,13 @@ export class Brand {
   slug: string;
 
   @ApiProperty()
-  @Column('varchar', { length: 1000, nullable: true })
+  @Column('varchar', { name: 'image_sources', length: 1000, nullable: true })
   imageSource: string;
 
   @ApiProperty()
-  @Column('varchar', { length: 255 })
+  @Column('simple-json', { name: 'ex_href', nullable: true })
   @Exclude()
-  exHref: string;
-
-  @ApiProperty()
-  @Column('varchar', { length: 255 })
-  @Exclude()
-  exBrandId: string;
+  exHrefs: string[];
 
   @ApiProperty()
   @Column({

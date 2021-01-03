@@ -14,7 +14,7 @@ export class CategoryService {
   findAll() {
     return this.categoryRepository.find({
       where: { status: EntityStatus.ACTIVE },
-      relations: ['children']
+      relations: ['children'],
     });
   }
 
@@ -30,6 +30,14 @@ export class CategoryService {
     return this.categoryRepository
       .createQueryBuilder()
       .where('parentId IS NOT NULL')
+      .andWhere('status = :status', { status: EntityStatus.ACTIVE })
+      .getMany();
+  }
+
+  findAllByParentId(parentId: number) {
+    return this.categoryRepository
+      .createQueryBuilder()
+      .where('parentId = :parentId', { parentId })
       .andWhere('status = :status', { status: EntityStatus.ACTIVE })
       .getMany();
   }

@@ -43,6 +43,28 @@ export class CategoryController {
     return this.categoryService.findAll();
   }
 
+  @Get('/root-categories')
+  @ApiResponse({
+    type: Category,
+    isArray: true,
+  })
+  @UseInterceptors(ClassSerializerInterceptor, CacheInterceptor)
+  @Public()
+  findAllRootCategories() {
+    return this.categoryService.findRootCategories();
+  }
+
+  @Get('/get-by-root-category/:rootCategoryId')
+  @ApiResponse({
+    type: Category,
+    isArray: true,
+  })
+  @UseInterceptors(ClassSerializerInterceptor, CacheInterceptor)
+  @Public()
+  getByRootCategory(@Param('rootCategoryId') rootCategoryId: number) {
+    return this.categoryService.findAllByParentId(rootCategoryId);
+  }
+
   @Role(UserRole.ADMIN)
   @Post()
   @ApiResponse({

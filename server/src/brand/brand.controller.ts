@@ -45,6 +45,17 @@ export class BrandController {
     return this.brandService.search(request);
   }
 
+  @Get('/get-by-category/:categoryId')
+  @ApiResponse({
+    type: Brand,
+    isArray: true,
+  })
+  @UseInterceptors(ClassSerializerInterceptor, CacheInterceptor)
+  @Public()
+  findAllByCategoryId(@Param('categoryId') categoryId: number) {
+    return this.brandService.findAllByCategoryId(categoryId);
+  }
+
   @Role(UserRole.ADMIN)
   @Post()
   @ApiResponse({

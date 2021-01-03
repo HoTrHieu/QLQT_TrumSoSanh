@@ -1,10 +1,8 @@
-import { Controller, Get, Post, Query } from '@nestjs/common';
+import { Controller, Post } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/common/decorators/public.decorator';
 import { BooleanResponse } from 'src/common/dtos/boolean-response.dto';
 import { CrawlerService } from './crawler.service';
-import { CrawlShopRequest } from './dtos/crawl-shop-request.dto';
-import { CrawlShopResponse } from './dtos/crawl-shop-response.dto';
 
 @ApiTags('Crawler')
 @Controller('/crawler')
@@ -61,14 +59,24 @@ export class CrawlerController {
     return BooleanResponse.of(true);
   }
 
-  @Get('/crawl-shops')
+  @Post('/crawl-shops')
   @ApiResponse({
-    type: CrawlShopResponse,
-    isArray: true
+    type: BooleanResponse,
   })
   @Public()
-  crawlShops(@Query() request: CrawlShopRequest) {
-    return this.crawlerService.crawlShops(request.productId, request.page);
+  crawlShops() {
+    this.crawlerService.crawlShops();
+    return BooleanResponse.of(true);
+  }
+
+  @Post('/crawl-shop-urls')
+  @ApiResponse({
+    type: BooleanResponse,
+  })
+  @Public()
+  crawlShopUrls() {
+    this.crawlerService.crawlShopUrls();
+    return BooleanResponse.of(true);
   }
 
   @Post('/save-root-categories')
@@ -111,13 +119,13 @@ export class CrawlerController {
     return BooleanResponse.of(true);
   }
 
-  @Post('/save-duplicated-products')
+  @Post('/save-shops')
   @ApiResponse({
     type: BooleanResponse,
   })
   @Public()
-  async saveDuplicatedProducts() {
-    await this.crawlerService.saveDuplicatedProducts();
+  async saveShops() {
+    await this.crawlerService.saveShops();
     return BooleanResponse.of(true);
   }
 }

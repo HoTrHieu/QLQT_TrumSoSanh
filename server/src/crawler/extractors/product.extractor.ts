@@ -14,7 +14,7 @@ export class ProductExtractor {
     await cluster.task(async ({ page, data }) => {
       const jobId = data.jobId;
       const href = data.href + '&page=' + data.page;
-      const fileName = `${data.brandId}.${data.page}.json`;
+      const fileName = `${data.brandId}.${data.exHrefIdx}.${data.page}.json`;
       const filePath = path.resolve(ProductExtractor.SAVE_DIR, fileName);
       if (fs.existsSync(filePath)) {
         ProductExtractor.logger.debug(
@@ -38,6 +38,11 @@ export class ProductExtractor {
         if (els) {
           els.forEach((el) => {
             products.push({
+              price: Number(
+                (el.querySelector(
+                  '.price-discount__price',
+                ) as any).innerText.replace(/\D+/g, ''),
+              ),
               name: (el.querySelector('.info .name') as any).innerText,
               rootUrl: (el as any).href.split('?')[0],
               imageSources: [(el.querySelector('.thumbnail img') as any).src],
@@ -57,6 +62,16 @@ export class ProductExtractor {
         const products = rawProducts.map((rawProduct) => {
           const product = ExtractBuilder.buildExtractedProduct(rawProduct);
           product.brand = { id: data.brandId } as any;
+          product.shops = [
+            {
+              name: 'tiki.vn',
+              price: rawProduct.price,
+              url: product.rootUrl,
+              title: product.name,
+              description: '',
+              imageSource: product.imageSources[0] || '',
+            },
+          ] as any;
           return product;
         });
         await fs.promises.writeFile(filePath, JSON.stringify(products));
@@ -68,11 +83,14 @@ export class ProductExtractor {
     });
 
     brands.forEach((brand) => {
-      cluster.queue({
-        jobId: ++jobCount,
-        brandId: brand.id,
-        href: brand.exHref + '?' + brand.exBrandId,
-        page: 1,
+      brand.exHrefs.forEach((exHref, exHrefIdx) => {
+        cluster.queue({
+          jobId: ++jobCount,
+          brandId: brand.id,
+          exHrefIdx: exHrefIdx,
+          href: exHref,
+          page: 1,
+        });
       });
     });
 

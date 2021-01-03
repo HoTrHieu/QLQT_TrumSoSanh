@@ -7,6 +7,7 @@
   "database": "trumsosanh",
   "entities": ["src/common/entities/*.ts"],
   "migrations": ["src/common/migrations/*.ts"],
+  "charset": "utf8mb4",
   "cli": {
     "migrationsDir": "src/common/migrations"
   },

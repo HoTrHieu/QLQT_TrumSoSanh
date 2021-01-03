@@ -4,6 +4,7 @@ import { Address } from '../entities/address.entity';
 import { Brand } from '../entities/brand.entity';
 import { Category } from '../entities/category.entity';
 import { Product } from '../entities/product.entity';
+import { Shop } from '../entities/shop.entity';
 import { User } from '../entities/user.entity';
 
 export const mysqlModule = TypeOrmModule.forRootAsync({
@@ -14,8 +15,9 @@ export const mysqlModule = TypeOrmModule.forRootAsync({
     username: config.get('settings.mysql.username'),
     password: config.get('settings.mysql.password'),
     database: config.get('settings.mysql.dbname'),
-    entities: [User, Category, Product, Brand, Address],
+    entities: [User, Category, Product, Brand, Address, Shop],
     synchronize: config.get('settings.mysql.sync'),
+    charset: 'utf8mb4',
   }),
   inject: [ConfigService],
 });

@@ -29,7 +29,7 @@ import { AddressModule } from './address/address.module';
     ProductModule,
     CategoryModule,
     CrawlerModule,
-    AddressModule
+    AddressModule,
   ],
   providers: [
     {

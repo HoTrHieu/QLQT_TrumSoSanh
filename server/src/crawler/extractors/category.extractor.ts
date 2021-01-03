@@ -12,6 +12,7 @@ export class CategoryExtractor {
   static async extract(cluster: Cluster, rootCategories: Category[]) {
     let doneCount = 0;
     let categories: Category[] = [];
+    let existsCategory = new Map();
     await cluster.task(async ({ page: categoryPage, data }) => {
       const rootCategory: Category = data;
       CategoryExtractor.logger.debug(
@@ -23,28 +24,11 @@ export class CategoryExtractor {
 
       const rawCategories = await categoryPage.evaluate(() => {
         const categories = [];
-        let categoryEls = null;
-
-        try {
-          categoryEls = document
-            .querySelector('#collapse-category')
-            .querySelectorAll('.list-group-item.is-child>a');
-        } catch (err) {}
-
-        try {
-          if (categoryEls === null) {
-            categoryEls = document
-              .querySelector('[class*="SideBar__Root"]')
-              .querySelector('div.block')
-              .querySelectorAll('div.list.collapsed>a');
-            if (categoryEls !== null) {
-              categoryEls = [...categoryEls].slice(1);
-            }
-          }
-        } catch (err) {}
-
+        let categoryEls = document.querySelectorAll(
+          '[data-view-label="Danh Mục Sản Phẩm"] a.item--category',
+        );
         if (categoryEls !== null) {
-          categoryEls.forEach((el) => {
+          categoryEls.forEach((el: any) => {
             const span = el.querySelector('span');
             if (span !== null) {
               el.removeChild(span);
@@ -62,11 +46,21 @@ export class CategoryExtractor {
         throw new Error('Empty extracted category at ' + rootCategory.exHref);
       } else {
         categories = categories.concat(
-          rawCategories.map((rawCategory) => {
-            const category = ExtractBuilder.buildExtractedCategory(rawCategory);
-            category.parent = { id: rootCategory.id } as any;
-            return category;
-          }),
+          rawCategories
+            .map((rawCategory) => {
+              const category = ExtractBuilder.buildExtractedCategory(
+                rawCategory,
+              );
+              category.parent = { id: rootCategory.id } as any;
+              return category;
+            })
+            .filter((category) => {
+              if (existsCategory.has(category.slug)) {
+                return false;
+              }
+              existsCategory.set(category.slug, true);
+              return true;
+            }),
         );
       }
 

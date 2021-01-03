@@ -2,13 +2,12 @@ import * as slugify from 'slug';
 import { Brand } from 'src/common/entities/brand.entity';
 import { Category } from 'src/common/entities/category.entity';
 import { Product } from 'src/common/entities/product.entity';
-import { CrawlShopResponse } from '../dtos/crawl-shop-response.dto';
+import { Shop } from 'src/common/entities/shop.entity';
 
 export class ExtractBuilder {
   static buildExtractedBrand(rawBrand: any) {
     const brand = new Brand();
-    brand.exHref = rawBrand.href;
-    brand.exBrandId = rawBrand.brandId;
+    brand.exHrefs = [rawBrand.href];
     brand.name = rawBrand.name;
     brand.slug = slugify(brand.name);
     return brand;
@@ -33,7 +32,7 @@ export class ExtractBuilder {
   }
 
   static buildExtractedShop(rawShop: any) {
-    const shop = new CrawlShopResponse();
+    const shop = new Shop();
     shop.name = rawShop.name;
     shop.price = rawShop.price;
     shop.url = rawShop.url;

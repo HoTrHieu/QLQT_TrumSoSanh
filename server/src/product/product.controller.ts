@@ -1,4 +1,12 @@
-import { Body, Controller, Get, NotFoundException, Param, Put, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/common/decorators/public.decorator';
 import { Role } from 'src/common/decorators/role.decorator';
@@ -6,6 +14,7 @@ import { BooleanResponse } from 'src/common/dtos/boolean-response.dto';
 import { UpdateStatusRequest } from 'src/common/dtos/update-status-request.dto';
 import { Product } from 'src/common/entities/product.entity';
 import { UserRole } from 'src/common/entities/user.entity';
+import { ProductResponse } from './dto/product-response.dto';
 import { SearchProductRequest } from './dto/search-product-request.dto';
 import { ProductService } from './product.service';
 
@@ -16,7 +25,7 @@ export class ProductController {
 
   @Get('/search')
   @ApiResponse({
-    type: Product,
+    type: ProductResponse,
     isArray: true,
   })
   @Public()
@@ -26,7 +35,7 @@ export class ProductController {
 
   @Get('/detail-by-id/:id')
   @ApiResponse({
-    type: Product,
+    type: ProductResponse,
   })
   @Public()
   async getDetailById(@Param('id') id: number) {
@@ -39,7 +48,7 @@ export class ProductController {
 
   @Get('/detail-by-slug/:slug')
   @ApiResponse({
-    type: Product,
+    type: ProductResponse,
   })
   @Public()
   async getDetailBySlug(@Param('slug') slug: string) {

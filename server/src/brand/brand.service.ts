@@ -14,7 +14,9 @@ export class BrandService {
   ) {}
 
   search(request: SearchRequest) {
-    const qb = this.brandRepository.createQueryBuilder('b').where('status = :status', { status: EntityStatus.ACTIVE });
+    const qb = this.brandRepository
+      .createQueryBuilder('b')
+      .where('status = :status', { status: EntityStatus.ACTIVE });
     if (request.isSearchTermExists) {
       qb.andWhere(`b.name LIKE '%${request.searchTerm}%'`);
     }
@@ -23,8 +25,18 @@ export class BrandService {
 
   findAll() {
     return this.brandRepository.find({
-      status: EntityStatus.ACTIVE
+      status: EntityStatus.ACTIVE,
     });
+  }
+
+  findAllByCategoryId(categoryId: number) {
+    return this.brandRepository
+      .createQueryBuilder('b')
+      .innerJoin('b.categories', 'c', 'c.categroyId = :categoryId', {
+        categoryId,
+      })
+      .where('b.status = :status', { status: EntityStatus.ACTIVE })
+      .getMany();
   }
 
   findOneByName(name: string) {

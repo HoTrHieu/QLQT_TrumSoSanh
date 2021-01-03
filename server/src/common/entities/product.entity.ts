@@ -5,11 +5,14 @@ import {
   Entity,
   Index,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Brand } from './brand.entity';
+import { Category } from './category.entity';
 import { EntityStatus } from './common/status.entity';
+import { Shop } from './shop.entity';
 
 @Entity({
   name: 'products',
@@ -25,7 +28,7 @@ export class Product {
 
   @ApiProperty()
   @Index({ unique: true })
-  @Column('varchar', { length: 500 })
+  @Column('varchar', { length: 768 })
   slug: string;
 
   @ApiProperty()
@@ -55,4 +58,12 @@ export class Product {
   @ApiProperty({ type: () => Brand })
   @ManyToOne(() => Brand, (brand) => brand.products)
   brand: Brand;
+
+  @ApiProperty({ type: () => Category })
+  @ManyToOne(() => Category, (category) => category.products)
+  category: Category;
+
+  @ApiProperty({ type: () => Shop, isArray: true })
+  @OneToMany(() => Shop, (shop) => shop.product)
+  shops: Shop[];
 }

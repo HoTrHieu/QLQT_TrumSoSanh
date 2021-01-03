@@ -84,8 +84,7 @@ export class BrandExtractor {
             const paramName = isBook ? 'publisher_vn' : 'brand';
             const brandId = new URL(el.href).searchParams.get(paramName);
             brands.push({
-              href,
-              brandId: paramName + '=' + brandId,
+              href: href + '?' + paramName + '=' + brandId,
               name: el.innerText.trim(),
             });
           });
@@ -129,8 +128,10 @@ export class BrandExtractor {
     brands.forEach((brand) => {
       if (!existsBrand.has(brand.slug)) {
         brand.categories = categoriesMap.get(brand.slug).map((id) => ({ id }));
-        existsBrand.set(brand.slug, true);
+        existsBrand.set(brand.slug, brand);
         distinctBrands.push(brand);
+      } else {
+        existsBrand.get(brand.slug).exHrefs.push(...brand.exHrefs);
       }
     });
 

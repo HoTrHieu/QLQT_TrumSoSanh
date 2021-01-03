@@ -1,19 +1,19 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Address } from "src/common/entities/address.entity";
-import { EntityStatus } from "src/common/entities/common/status.entity";
-import { Repository } from "typeorm";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Address } from 'src/common/entities/address.entity';
+import { EntityStatus } from 'src/common/entities/common/status.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AddressService {
   constructor(
     @InjectRepository(Address)
-    private addressRepository: Repository<Address>
+    private addressRepository: Repository<Address>,
   ) {}
 
   all() {
     return this.addressRepository.find({
-      status: EntityStatus.ACTIVE
+      status: EntityStatus.ACTIVE,
     });
   }
 

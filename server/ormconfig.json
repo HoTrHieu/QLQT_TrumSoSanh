@@ -1,0 +1,15 @@
+{
+  "type": "mysql",
+  "host": "localhost",
+  "port": 3306,
+  "username": "root",
+  "password": "123456789",
+  "database": "trumsosanh",
+  "entities": ["src/common/entities/*.ts"],
+  "migrations": ["src/common/migrations/*.ts"],
+  "charset": "utf8mb4",
+  "cli": {
+    "migrationsDir": "src/common/migrations"
+  },
+  "synchronize": true
+}

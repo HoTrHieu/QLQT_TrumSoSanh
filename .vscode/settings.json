@@ -1,0 +1,12 @@
+{
+  "files.exclude": {
+    "**/crawled-data/products": true,
+    "**/crawled-data/shops": true,
+    "**/server/dist": true
+  },
+  "search.exclude": {
+    "**/crawled-data/products": true,
+    "**/crawled-data/shops": true,
+    "**/server/dist": true
+  }
+}

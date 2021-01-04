@@ -9,11 +9,10 @@ const ListProduct = (props) => {
   const [listProduct, setListProduct] = useState([]);
 
   useEffect(() => {
-    const id = props.match.params.id;
-    ProductService.getProductSearch({page: 1,pageSize: 10,searchTerm: null,brandIds: null, categoryIds: id}).then(res=> {
+    ProductService.getProductSearch({page: 1,pageSize: 10,searchTerm: null,brandIds: null, categoryIds: props.match.params.id}).then(res=> {
         setListProduct(res.data.items)
     })
-  }, []);
+  }, [props.match.params.id]);
 
   const render = () => {
     return (

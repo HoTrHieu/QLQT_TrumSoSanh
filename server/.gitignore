@@ -32,6 +32,6 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-webapp
+frontend
 src/crawler/crawled-data/products
 src/crawler/crawled-data/shops

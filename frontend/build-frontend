@@ -1,0 +1,3 @@
+yarn build
+rm -rf ../server/frontend
+cp -r build ../server/frontend

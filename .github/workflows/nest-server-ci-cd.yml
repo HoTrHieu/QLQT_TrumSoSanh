@@ -4,6 +4,7 @@
 name: Nest server CI/CD
 
 on:
+  workflow_dispatch:
   push:
     branches: [ deploy-nest-server ]
 

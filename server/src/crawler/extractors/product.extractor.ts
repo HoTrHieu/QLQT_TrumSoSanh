@@ -17,10 +17,20 @@ export class ProductExtractor {
       const fileName = `${data.brandId}.${data.exHrefIdx}.${data.page}.json`;
       const filePath = path.resolve(ProductExtractor.SAVE_DIR, fileName);
       if (fs.existsSync(filePath)) {
+        let isEmpty = false;
+        try {
+          const products = JSON.parse(await fs.promises.readFile(filePath, 'utf8'));
+          isEmpty = products.length === 0;
+        } catch (err) {
+          isEmpty = true;
+        }
+
         ProductExtractor.logger.debug(
           `${jobId}. Skip extract products: ${href}`,
         );
-        cluster.queue({ ...data, jobId: ++jobCount, page: data.page + 1 });
+        if (!isEmpty) {
+          cluster.queue({ ...data, jobId: ++jobCount, page: data.page + 1 });
+        }
         return;
       }
 

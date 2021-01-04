@@ -26,8 +26,18 @@ export class ShopExtractor {
       const fileName = `${product.id}.${data.page}.json`;
       const filePath = path.resolve(ShopExtractor.SAVE_DIR, fileName);
       if (fs.existsSync(filePath)) {
+        let isEmpty = false;
+        try {
+          const shops = JSON.parse(await fs.promises.readFile(filePath, 'utf8'));
+          isEmpty = shops.length === 0;
+        } catch (err) {
+          isEmpty = true;
+        }
+        
         ShopExtractor.logger.debug(`${jobId}. Skip extract shops: ${jobInfo}`);
-        cluster.queue({ page: data.page + 1 });
+        if (!isEmpty) {
+          cluster.queue({ page: data.page + 1 });
+        }
         return;
       }
       ShopExtractor.logger.debug(`${jobId}. Start extract shops: ${jobInfo}`);

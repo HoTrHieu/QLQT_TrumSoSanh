@@ -2,17 +2,22 @@ import React, { useState, useEffect } from "react";
 import {
   Layout,
 } from "../../components";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ProductService } from "../../../core/services";
 
+function useQuery() {
+    return new URLSearchParams(useLocation().search);
+}
+
 const ListProduct = (props) => {
+  const query = useQuery();
   const [listProduct, setListProduct] = useState([]);
 
   useEffect(() => {
-    ProductService.getProductSearch({page: 1,pageSize: 10,searchTerm: null,brandIds: null, categoryIds: props.match.params.id}).then(res=> {
+    ProductService.getProductSearch({page: 1,pageSize: 10,searchTerm: query.get('searchTerm'),brandIds: null, categoryIds: query.get('id')}).then(res=> {
         setListProduct(res.data.items)
     })
-  }, [props.match.params.id]);
+  }, [query.get('id'), query.get('searchTerm')]);
 
   const render = () => {
     return (

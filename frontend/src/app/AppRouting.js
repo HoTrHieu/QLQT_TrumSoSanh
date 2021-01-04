@@ -10,7 +10,7 @@ const AppRouting = (props) => {
         <Route exact path="/compare" component={Compare} />
         <Route exact path="/login" component={Login} />
         <Route exact path="/register" component={Register} />
-        <Route exact path="/list-product/:id" component={ListProduct} />
+        <Route exact path="/list-product" component={ListProduct} />
       </Switch>
     );
   };

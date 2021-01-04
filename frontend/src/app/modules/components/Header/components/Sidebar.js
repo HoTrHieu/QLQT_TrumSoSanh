@@ -34,7 +34,7 @@ const Sidebar = (props) => {
               {
                 listCate.map((item, index) => (
                   <li key={index}>
-                    <Link to={`/list-product/${item.id}`} className="nav-link u-header__sub-menu-nav-link">{item.name}</Link>
+                    <Link to={`/list-product?id=${item.id}`} className="nav-link u-header__sub-menu-nav-link">{item.name}</Link>
                   </li>
                 ))
               }

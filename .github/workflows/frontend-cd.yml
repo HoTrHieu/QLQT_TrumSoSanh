@@ -20,6 +20,6 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         script: |
           cd /home/deployer/projects/QLQT_TrumSoSanh
-          git pull origin deploy-nest-server
+          git pull origin deploy-frontend
           cd frontend
           ./build-frontend

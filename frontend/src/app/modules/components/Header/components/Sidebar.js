@@ -23,8 +23,8 @@ const Sidebar = (props) => {
     ];
     return (
       <ul className="navbar-nav u-header__navbar-nav">
-        {dummyData.map((item) => (
-          <li
+        {dummyData.map((item, index) => (
+          <li key={index}
             className="nav-item u-header__nav-item"
             data-event="hover"
             data-position="left"

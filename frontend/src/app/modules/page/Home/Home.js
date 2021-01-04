@@ -9,9 +9,9 @@ import {
 import { SearchService } from "./../../../core/services";
 
 const Home = (props) => {
-  useEffect(() => {
-    SearchService.getCrawByKeyWord("hieudeptrai");
-  });
+  // useEffect(() => {
+  //   SearchService.getCrawByKeyWord("hieudeptrai");
+  // });
 
   const render = () => {
     return (

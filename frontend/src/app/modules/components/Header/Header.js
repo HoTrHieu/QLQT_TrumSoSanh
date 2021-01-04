@@ -5,12 +5,12 @@ import { Topbar, Menu, Sidebar, MobileItem } from "./components";
 import { CategoryService } from './../../../core/services';
 
 const Header = (props) => {
-  const [listCategory, setListCategory] = useState();
-  useEffect(() => {
-    CategoryService.getAll().then(res => {
-      setListCategory(res.data);
-      })
-  },[]);
+  // const [listCategory, setListCategory] = useState();
+  // useEffect(() => {
+  //   CategoryService.getAll().then(res => {
+  //     setListCategory(res.data);
+  //     })
+  // },[]);
 
   const render = () => {
     return (

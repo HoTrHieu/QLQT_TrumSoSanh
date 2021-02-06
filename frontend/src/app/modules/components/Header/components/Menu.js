@@ -4,7 +4,14 @@ import { Link } from "react-router-dom";
 const Menu = (props) => {
   const render = () => {
     return (
-      <div className="col">
+      <div
+        className="col"
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          // paddingRight: 0,
+        }}
+      >
         <nav className="js-mega-menu navbar navbar-expand-md u-header__navbar u-header__navbar--no-space">
           <div
             id="navBar"
@@ -34,6 +41,14 @@ const Menu = (props) => {
             </ul>
           </div>
         </nav>
+        {props.showCompareButton === true && (
+          <a
+            className="btn btn-primary  rounded-lg font-weight-normal py-2 px-md-7 px-3 mb-1 mt-1 font-size-15"
+            href="/compare"
+          >
+            So sánh
+          </a>
+        )}
       </div>
     );
   };

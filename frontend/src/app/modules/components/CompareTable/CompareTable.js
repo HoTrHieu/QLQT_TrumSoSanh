@@ -10,7 +10,7 @@ const CompareTable = (props) => {
         {data.map((product, index) => {
           return (
             <td key={index}>
-              <a href={product.rootUrl} className="product d-block">
+              <Link to="/product-detail" className="product d-block">
                 <div className="product-compare-image">
                   <div className="d-flex mb-3">
                     <img
@@ -23,7 +23,7 @@ const CompareTable = (props) => {
                 <h3 className="product-item__title text-blue font-weight-bold mb-3">
                   {product.name}
                 </h3>
-              </a>
+              </Link>
               {/* <div className="text-warning mb-2">
                 <small className="fas fa-star" />
                 <small className="fas fa-star" />

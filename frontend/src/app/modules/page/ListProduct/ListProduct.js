@@ -6,6 +6,7 @@ import { Layout } from "../../components";
 import { Link, useLocation } from "react-router-dom";
 import { ProductService } from "../../../core/services";
 import { toast } from "react-toastify";
+import { formatVND } from "../../../utils/functions";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -54,16 +55,16 @@ const ListProduct = (props) => {
                                   </Link> */}
                                 </div>
                                 <h5 className="mb-1 product-item__title">
-                                  <a
-                                    href={item.rootUrl}
+                                  <Link
+                                    to={`/product-detail?id=${item.id}`}
                                     className="text-blue font-weight-bold"
                                   >
                                     {item.name}
-                                  </a>
+                                  </Link>
                                 </h5>
                                 <div className="mb-2">
-                                  <a
-                                    href={item.rootUrl}
+                                  <Link
+                                    to={`/product-detail?id=${item.id}`}
                                     className="d-block text-center"
                                   >
                                     <img
@@ -71,12 +72,12 @@ const ListProduct = (props) => {
                                       src={item.imageSources[0]}
                                       alt="Image Description"
                                     />
-                                  </a>
+                                  </Link>
                                 </div>
                                 <div className="flex-center-between mb-1">
                                   <div className="prodcut-price">
                                     <div className="text-gray-100">
-                                      {item.minPrice + "đ"}
+                                      {formatVND(item.minPrice)}
                                     </div>
                                   </div>
                                   <div className="d-none d-xl-block prodcut-add-cart">
@@ -86,11 +87,6 @@ const ListProduct = (props) => {
                                           localStorage.getItem(
                                             "compareProducts"
                                           ) || "[]"
-                                        );
-
-                                        console.log(
-                                          "ahihi-compareProducts: ",
-                                          compareProducts
                                         );
 
                                         const isExists =

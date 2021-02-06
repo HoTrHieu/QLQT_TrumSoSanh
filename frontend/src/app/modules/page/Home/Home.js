@@ -6,23 +6,52 @@ import {
   SpecialOffer,
   Product,
 } from "./../../components";
-import { SearchService } from "./../../../core/services";
+import { ProductService, SearchService } from "./../../../core/services";
 
 const Home = (props) => {
-  // useEffect(() => {
-  //   SearchService.getCrawByKeyWord("hieudeptrai");
-  // });
+  const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [onSaleProducts, setOnSaleProducts] = useState([]);
+  const [topProducts, setTopProducts] = useState([]);
 
+  useEffect(() => {
+    ProductService.getProductSearch({
+      page: 2,
+      pageSize: 6,
+      searchTerm: "macbook",
+    }).then((res) => {
+      setFeaturedProducts(res.data.items);
+    });
+
+    ProductService.getProductSearch({
+      page: 2,
+      pageSize: 6,
+      searchTerm: "Tủ lạnh",
+    }).then((res) => {
+      setOnSaleProducts(res.data.items);
+    });
+
+    ProductService.getProductSearch({
+      page: 2,
+      pageSize: 6,
+      searchTerm: "Iphone 12",
+    }).then((res) => {
+      setTopProducts(res.data.items);
+    });
+  }, []);
   const render = () => {
     return (
-      <Layout>
-        <Slider></Slider>
+      <Layout showCompareButton>
+        {/* <Slider></Slider> */}
         <div className="container">
-          <Banner></Banner>
+          {/* <Banner></Banner> */}
           <div className="mb-5">
             <div className="row">
-              <SpecialOffer></SpecialOffer>
-              <Product></Product>
+              {/* <SpecialOffer></SpecialOffer> */}
+              <Product
+                featuredProducts={featuredProducts}
+                onSaleProducts={onSaleProducts}
+                topProducts={topProducts}
+              />
             </div>
           </div>
         </div>

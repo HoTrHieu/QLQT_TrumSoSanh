@@ -5,7 +5,7 @@ const Layout = (props) => {
   const render = () => {
     return (
       <main>
-        <Header></Header>
+        <Header showCompareButton={props.showCompareButton}></Header>
         {props.children}
         <Footer></Footer>
       </main>

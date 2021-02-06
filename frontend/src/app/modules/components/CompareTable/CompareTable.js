@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { formatVND } from "../../../utils/functions";
 
 const CompareTable = (props) => {
   const renderProductImageRow = (data) => {
@@ -9,12 +10,12 @@ const CompareTable = (props) => {
         {data.map((product, index) => {
           return (
             <td key={index}>
-              <Link to="#" className="product d-block">
+              <a href={product.rootUrl} className="product d-block">
                 <div className="product-compare-image">
                   <div className="d-flex mb-3">
                     <img
-                      className="img-fluid mx-auto"
-                      src={product.image}
+                      className="img-fluid mx-auto min-width-200"
+                      src={product.imageSources[0]}
                       alt="Description"
                     />
                   </div>
@@ -22,14 +23,14 @@ const CompareTable = (props) => {
                 <h3 className="product-item__title text-blue font-weight-bold mb-3">
                   {product.name}
                 </h3>
-              </Link>
-              <div className="text-warning mb-2">
+              </a>
+              {/* <div className="text-warning mb-2">
                 <small className="fas fa-star" />
                 <small className="fas fa-star" />
                 <small className="fas fa-star" />
                 <small className="fas fa-star" />
                 <small className="fas fa-star" />
-              </div>
+              </div> */}
             </td>
           );
         })}
@@ -44,7 +45,7 @@ const CompareTable = (props) => {
         {data.map((product, index) => {
           return (
             <td key={index}>
-              <div className="product-price">{product.price}</div>
+              <div className="product-price">{formatVND(product.minPrice)}</div>
             </td>
           );
         })}
@@ -59,7 +60,7 @@ const CompareTable = (props) => {
         {data.map((product, index) => {
           return (
             <td key={index}>
-              <span>{product.availability}</span>
+              <span>{product.status === 1 ? "Có sẵn" : "Hết hàng"}</span>
             </td>
           );
         })}
@@ -177,21 +178,30 @@ const CompareTable = (props) => {
 
   const render = () => {
     const { data } = props;
+
+    const isEmpty = !data || (data && data.length === 0);
+
     return (
       <div className="table-responsive table-bordered table-compare-list mb-10 border-0">
-        <table className="table">
-          <tbody>
-            {renderProductImageRow(data)}
-            {renderProductPriceRow(data)}
-            {renderAvailabilityRow(data)}
-            {renderDescriptionRow(data)}
-            {renderAddToCartButtonRow(data)}
-            {renderSkuRow(data)}
-            {renderWeightRow(data)}
-            {renderColorRow(data)}
-            {renderRemoveButtonRow(data)}
-          </tbody>
-        </table>
+        {isEmpty ? (
+          <div style={styles.emptyTextContainer}>
+            <h2>Không có sản phẩm cần so sánh</h2>
+          </div>
+        ) : (
+          <table className="table">
+            <tbody>
+              {renderProductImageRow(data)}
+              {renderProductPriceRow(data)}
+              {renderAvailabilityRow(data)}
+              {/* {renderDescriptionRow(data)} */}
+              {/* {renderAddToCartButtonRow(data)} */}
+              {/* {renderSkuRow(data)} */}
+              {/* {renderWeightRow(data)} */}
+              {/* {renderColorRow(data)} */}
+              {renderRemoveButtonRow(data)}
+            </tbody>
+          </table>
+        )}
       </div>
     );
   };
@@ -199,3 +209,12 @@ const CompareTable = (props) => {
 };
 
 export default CompareTable;
+
+const styles = {
+  emptyTextContainer: {
+    flex: 1,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+};

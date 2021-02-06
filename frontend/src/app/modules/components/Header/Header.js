@@ -1,8 +1,8 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { Topbar, Menu, Sidebar, MobileItem } from "./components";
-import { CategoryService } from './../../../core/services';
+import { CategoryService } from "./../../../core/services";
 
 const Header = (props) => {
   // const [listCategory, setListCategory] = useState();
@@ -12,12 +12,12 @@ const Header = (props) => {
   //     })
   // },[]);
   const handleSubmitInput = () => {
-    const value = document.getElementById('searchproduct-item').value;
+    const value = document.getElementById("searchproduct-item").value;
     props.history.push({
-      pathname: '/list-product',
-      search: `?searchTerm=${value}`
-    })
-  }
+      pathname: "/list-product",
+      search: `?searchTerm=${value}`,
+    });
+  };
 
   const render = () => {
     return (
@@ -60,7 +60,9 @@ const Header = (props) => {
                           className="btn btn-primary height-40 py-2 px-3 rounded-right-pill"
                           type="button"
                           id="searchProduct1"
-                          onClick={()=>{handleSubmitInput()}}
+                          onClick={() => {
+                            handleSubmitInput();
+                          }}
                         >
                           <span className="ec ec-search font-size-24" />
                         </button>
@@ -99,7 +101,7 @@ const Header = (props) => {
           <div className="d-none d-xl-block container">
             <div className="row">
               <Sidebar></Sidebar>
-              <Menu></Menu>
+              <Menu showCompareButton={props.showCompareButton}></Menu>
             </div>
           </div>
         </div>

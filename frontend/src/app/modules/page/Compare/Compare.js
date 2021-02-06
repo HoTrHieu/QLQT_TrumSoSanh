@@ -6,10 +6,7 @@ const Compare = (props) => {
     JSON.parse(localStorage.getItem("compareProducts"))
   );
 
-  console.log("ahihi-data: ", compareProducts);
-
   const render = () => {
-    console.log("ahihi-props: ", props);
     return (
       <Layout>
         <Breadcrumb />

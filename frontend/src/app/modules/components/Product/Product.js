@@ -7,9 +7,12 @@ import { formatVND } from "../../../utils/functions";
 
 const Product = (props) => {
   const { featuredProducts, onSaleProducts, topProducts } = props;
-  console.log("ahihi-featuredProducts: ", featuredProducts);
-  console.log("ahihi-onSaleProducts: ", onSaleProducts);
-  console.log("ahihi-topProducts: ", topProducts);
+  const _onClickProduct = (id) => {
+    props.history.push({
+      pathname: "/product-detail",
+      search: `?id=${id}`,
+    });
+  };
 
   const _renderListProduct = (products) => {
     return (
@@ -30,14 +33,17 @@ const Product = (props) => {
                 </div> */}
                     <h5 className="mb-1 product-item__title">
                       <a
-                        href={item.rootUrl}
                         className="text-blue font-weight-bold"
+                        onClick={() => _onClickProduct(item.id)}
                       >
                         {item.name}
                       </a>
                     </h5>
                     <div className="mb-2">
-                      <a href={item.rootUrl} className="d-block text-center">
+                      <a
+                        onClick={() => _onClickProduct(item.id)}
+                        className="d-block text-center"
+                      >
                         <img
                           className="img-fluid"
                           src={item.imageSources[0]}
@@ -53,16 +59,10 @@ const Product = (props) => {
                       </div>
                       <div className="d-none d-xl-block prodcut-add-cart">
                         <a
-                          // href={item.rootUrl}
                           className="btn-add-cart btn-primary transition-3d-hover"
                           onClick={() => {
                             const compareProducts = JSON.parse(
                               localStorage.getItem("compareProducts") || "[]"
-                            );
-
-                            console.log(
-                              "ahihi-compareProducts: ",
-                              compareProducts
                             );
 
                             const isExists =
@@ -141,6 +141,7 @@ const Product = (props) => {
             >
               <li className="nav-item">
                 <a
+                  onClick={(e) => props.onTabChanged && props.onTabChanged(0)}
                   className="nav-link active "
                   id="pills-one-example1-tab"
                   data-toggle="pill"
@@ -156,6 +157,7 @@ const Product = (props) => {
               </li>
               <li className="nav-item">
                 <a
+                  onClick={(e) => props.onTabChanged && props.onTabChanged(1)}
                   className="nav-link "
                   id="pills-two-example1-tab"
                   data-toggle="pill"
@@ -171,6 +173,7 @@ const Product = (props) => {
               </li>
               <li className="nav-item">
                 <a
+                  onClick={(e) => props.onTabChanged && props.onTabChanged(2)}
                   className="nav-link "
                   id="pills-three-example1-tab"
                   data-toggle="pill"
@@ -205,7 +208,6 @@ const Product = (props) => {
             >
               {_renderListProduct(onSaleProducts)}
             </div>
-
             <div
               className="tab-pane fade pt-2"
               id="pills-three-example1"

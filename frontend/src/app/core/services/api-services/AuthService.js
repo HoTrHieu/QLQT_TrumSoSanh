@@ -4,7 +4,7 @@ import axios from 'axios';
 const ApiPath = {
     API_USER: '/api/users',
     API_CHECK_EMAIL: '/api/users/checkEmail',
-    API_AUTH: '/api/auth',
+    API_AUTH: '/api/v1/auth/login',
 }
 
 class AuthService {

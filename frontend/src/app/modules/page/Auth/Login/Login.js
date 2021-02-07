@@ -6,13 +6,13 @@ import Swal from  'sweetalert2'
 export default class Login extends React.Component {
 
   state = {
-    email: '',
+    username: '',
     password: '',
   }
 
-  handleChangeEmail = event => {
+  handleChangeUsername = event => {
     this.setState({
-      email: event.target.value
+      username: event.target.value
     });
   }
   handleChangePassword = event => {
@@ -23,11 +23,12 @@ export default class Login extends React.Component {
   handleSubmit = event =>  {
     event.preventDefault();
     const user = {
-      email: this.state.email,
+      username: this.state.username,
       password: this.state.password,
     }
+    
     AuthService.checkLogin(user).then(res => {
-      if(res.data.authenticated === true) {
+      if(res.status === 201) {
         localStorage.setItem('accessToken', res.data.accessToken);
         localStorage.setItem('refreshToken', res.data.refreshToken);
         window.location = '/';
@@ -35,7 +36,7 @@ export default class Login extends React.Component {
       else {
         Swal.fire({
           icon: 'error',
-          text: 'Email hoặc mật khẩu chưa đúng !!!',
+          text: 'Username hoặc mật khẩu chưa đúng !!!',
         })
       }
     });
@@ -52,14 +53,14 @@ export default class Login extends React.Component {
             </header>
             <div className="form-group">
               <div className="js-form-message js-focus-state">
-                <label className="sr-only" htmlFor="signinEmail">Email</label>
+                <label className="sr-only">Username</label>
                 <div className="input-group">
                   <div className="input-group-prepend">
-                    <span className="input-group-text" id="signinEmailLabel">
+                    <span className="input-group-text">
                       <span className="fas fa-user" />
                     </span>
                   </div>
-                  <input type="email" onChange={this.handleChangeEmail} className="form-control" placeholder="Email" data-msg="Please enter a valid email address." data-error-class="u-has-error" data-success-class="u-has-success" />
+                  <input onChange={this.handleChangeUsername} className="form-control" placeholder="Username" required data-msg="Your username is invalid. Please try again." />
                 </div>
               </div>
             </div>

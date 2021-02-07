@@ -14,8 +14,7 @@ const Header = (props) => {
   const handleSubmitInput = () => {
     const value = document.getElementById("searchproduct-item").value;
     props.history.push({
-      pathname: "/list-product",
-      search: `?searchTerm=${value}`,
+      pathname: "/list-product/s/" + value,
     });
   };
 
@@ -40,11 +39,14 @@ const Header = (props) => {
                 </div>
                 <div className="col d-none d-xl-block">
                   <div className="text-center">
-                    <h2 className="font-size-15  font-weight-bold">
+                    <h2 className="font-size-15 font-weight-bold mb-3">
                       So sánh và tìm giá rẻ nhất
                     </h2>
                   </div>
-                  <form className="js-focus-state">
+                  <form className="js-focus-state" onSubmit={e => {
+                    e.preventDefault();
+                    handleSubmitInput();
+                  }}>
                     <label className="sr-only" htmlFor="searchproduct">
                       Tìm Kiếm
                     </label>
@@ -100,7 +102,7 @@ const Header = (props) => {
           {/* Vertical-and-secondary-menu */}
           <div className="d-none d-xl-block container">
             <div className="row">
-              <Sidebar></Sidebar>
+              <Sidebar staticSideBar={props.staticSideBar}></Sidebar>
               <Menu showCompareButton={props.showCompareButton}></Menu>
             </div>
           </div>

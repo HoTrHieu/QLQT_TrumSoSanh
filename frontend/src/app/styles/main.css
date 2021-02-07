@@ -1,0 +1,35 @@
+.rc-pagination {
+  display: flex;
+}
+.rc-pagination-item,
+.rc-pagination-prev,
+.rc-pagination-next,
+.rc-pagination-jump-next {
+  border: 1px solid #d1d1d1;
+  padding: .25rem .75rem;
+  margin-left: .25rem;
+  margin-right: .25rem;
+  cursor: pointer;
+  border-radius: .25rem;
+}
+.rc-pagination-item:hover,
+.rc-pagination-prev:hover,
+.rc-pagination-next:hover,
+.rc-pagination-jump-next:hover {
+  background: #f1f1f1;
+}
+.rc-pagination-disabled {
+  display: none;
+}
+.rc-pagination-item-active {
+  background: #fed700 !important;
+}
+.rc-pagination-jump-next::before {
+  content: '...';
+}
+.rc-pagination-prev::before {
+  content: '<';
+}
+.rc-pagination-next::before {
+  content: '>';
+}

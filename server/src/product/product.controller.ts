@@ -11,6 +11,7 @@ import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/common/decorators/public.decorator';
 import { Role } from 'src/common/decorators/role.decorator';
 import { BooleanResponse } from 'src/common/dtos/boolean-response.dto';
+import { PagingResponse } from 'src/common/dtos/paging-response.dto';
 import { UpdateStatusRequest } from 'src/common/dtos/update-status-request.dto';
 import { UserRole } from 'src/common/entities/user.entity';
 import { ProductResponse } from './dto/product-response.dto';
@@ -24,7 +25,7 @@ export class ProductController {
 
   @Get('/search')
   @ApiResponse({
-    type: ProductResponse,
+    type: PagingResponse,
     isArray: true,
   })
   @Public()

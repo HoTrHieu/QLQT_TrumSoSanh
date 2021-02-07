@@ -11,6 +11,7 @@ import {
   Request,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Public } from 'src/common/decorators/public.decorator';
 import { Role } from 'src/common/decorators/role.decorator';
 import { BooleanResponse } from 'src/common/dtos/boolean-response.dto';
 import { PagingResponse } from 'src/common/dtos/paging-response.dto';
@@ -40,12 +41,12 @@ export class UserController {
     return this.userService.searchUser(request);
   }
 
+  @Public()
   @Role(UserRole.ADMIN)
   @Post()
   @ApiResponse({
     type: StdResponse,
   })
-  @ApiBearerAuth()
   async addUser(@Body() request: AddUserRequest) {
     const newUser = await this.userService.addUser(request);
     return StdResponse.of(StdResponseCode.SUCCESS, newUser.id);

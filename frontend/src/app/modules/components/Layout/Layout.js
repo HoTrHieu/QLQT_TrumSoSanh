@@ -5,7 +5,10 @@ const Layout = (props) => {
   const render = () => {
     return (
       <main>
-        <Header showCompareButton={props.showCompareButton}></Header>
+        <Header
+          staticSideBar={props.staticSideBar}
+          showCompareButton={props.showCompareButton}
+        ></Header>
         {props.children}
         <Footer></Footer>
       </main>

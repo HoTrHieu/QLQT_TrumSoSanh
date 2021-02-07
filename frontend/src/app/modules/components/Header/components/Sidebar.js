@@ -1,27 +1,25 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Link, withRouter } from "react-router-dom";
-import { CategoryService } from './../../../../core/services';
+import { CategoryService } from "./../../../../core/services";
 
 const Sidebar = (props) => {
   const [rootCategory, setRootCategory] = useState();
-  const [forcus, setForcus] = useState(false);
 
   useEffect(() => {
-    CategoryService.getChildCategory().then(res=>{
-      if(res.data) {
-        const listCate = res.data.slice(0, 13).map(item => {
+    CategoryService.getChildCategory().then((res) => {
+      if (res.data) {
+        const listCate = res.data.slice(0, 13).map((item) => {
           return {
             ...item,
-            isForcus: false
-          }
-        })
+            isFocus: false,
+          };
+        });
         setRootCategory(listCate);
       }
-    })
-  },[]);
+    });
+  }, []);
 
   const renderChildCategory = (listCate) => {
-
     return (
       <div className="hs-mega-menu vmm-tfw u-header__sub-menu animated hs-position-left fadeOut">
         {/* <div className="vmm-bg">
@@ -31,39 +29,38 @@ const Sidebar = (props) => {
           <div className="col mb-3 mb-sm-0">
             {/* <span className="u-header__sub-menu-title">Computers &amp; Accessories</span> */}
             <ul className="u-header__sub-menu-nav-group mb-3">
-              {
-                listCate.map((item, index) => (
-                  <li key={index}>
-                    <Link to={`/list-product?id=${item.id}`} className="nav-link u-header__sub-menu-nav-link">{item.name}</Link>
-                  </li>
-                ))
-              }
+              {listCate.map((item, index) => (
+                <li key={index}>
+                  <Link
+                    to={`/list-product/c/${item.id}`}
+                    className="nav-link u-header__sub-menu-nav-link"
+                  >
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
       </div>
-    )
-  }
+    );
+  };
 
-  const handleForcus = (type, id) => {
-    const newCate = rootCategory.map(item => {
-      if(item.id == id) {
+  const toggleFocus = (id) => {
+    const newCate = rootCategory.map((item) => {
+      if (item.id == id) {
         return {
           ...item,
-          isForcus: type === 'forcus' ? true : false
-        }
+          isFocus: !item.isFocus,
+        };
       } else {
-        return item
+        return item;
       }
-    })
-    setRootCategory(newCate)
-  }
+    });
+    setRootCategory(newCate);
+  };
 
   const render = () => {
-    //hs-mega-menu-opened
-    const cusClass = ['nav-item', 'hs-has-mega-menu', 'u-header__nav-item'];
-    forcus && cusClass.push('hs-mega-menu-opened');
-
     return (
       <div className="col-md-auto d-none d-xl-block">
         <div className="max-width-270 min-width-270">
@@ -84,14 +81,17 @@ const Sidebar = (props) => {
                   <span className="ml-0 text-gray-90 mr-2">
                     <span className="fa fa-list-ul" />
                   </span>
-                  <span className="pl-1 text-gray-90">Danh sách loại mặt hàng</span>
+                  <span className="pl-1 text-gray-90">
+                    Danh sách loại mặt hàng
+                  </span>
                 </button>
               </div>
               <div
                 id="basicsCollapseOne"
-                className="vertical-menu collapse"
+                className={"vertical-menu collapse " + (props.staticSideBar ? 'show' : '')}
                 aria-labelledby="basicsHeadingOne"
                 data-parent="#basicsAccordion"
+                style={props.staticSideBar ? { position: "static" } : {}}
               >
                 <div className="card-body p-0">
                   <nav className="js-mega-menu navbar navbar-expand-xl u-header__navbar u-header__navbar--no-space hs-menu-initialized">
@@ -99,26 +99,26 @@ const Sidebar = (props) => {
                       id="navBar"
                       className="collapse navbar-collapse u-header__navbar-collapse"
                     >
-                      {
-                        rootCategory &&
+                      {rootCategory && (
                         <ul className="navbar-nav u-header__navbar-nav">
-                          {
-                            rootCategory.map((item, index) => ( 
-                              // className="nav-item hs-has-mega-menu u-header__nav-item hs-mega-menu-opened"
-                              <li key={index} className={`nav-item hs-has-mega-menu u-header__nav-item ${item.isForcus ? 'hs-mega-menu-opened' : ''}`}
-                                onFocus={() => handleForcus('forcus',item.id)}
-                                onBlur={() => setTimeout(() => {
-                                  handleForcus('blur',item.id)
-                                }, 500)}
+                          {rootCategory.map((item, index) => (
+                            // className="nav-item hs-has-mega-menu u-header__nav-item hs-mega-menu-opened"
+                            <li
+                              key={index}
+                              className={`nav-item hs-has-mega-menu u-header__nav-item ${item.isFocus ? 'hs-mega-menu-opened' : ''}`}
+                              onClick={() => toggleFocus(item.id)}
+                            >
+                              <Link
+                                to="#"
+                                className="nav-link u-header__nav-link u-header__nav-link-toggle"
                               >
-                                <Link to="#" className="nav-link u-header__nav-link u-header__nav-link-toggle"
-                                >{item.name}</Link>
-                                  {renderChildCategory(item.children)}
-                              </li>
-                            ))
-                          }
+                                {item.name}
+                              </Link>
+                              {renderChildCategory(item.children)}
+                            </li>
+                          ))}
                         </ul>
-                      }
+                      )}
                     </div>
                   </nav>
                 </div>

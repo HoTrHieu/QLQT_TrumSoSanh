@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import * as React from "react";
-import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { formatVND } from "../../../utils/functions";
 
@@ -19,7 +18,7 @@ const Product = (props) => {
       <ul className="row list-unstyled products-group no-gutters">
         {products.map((item) => {
           return (
-            <li className="col-6 col-wd-3 col-md-4 product-item">
+            <li className="col-6 col-wd-3 col-md-4">
               <div className="product-item__outer h-100">
                 <div className="product-item__inner px-xl-4 p-3">
                   <div className="product-item__body pb-xl-2">

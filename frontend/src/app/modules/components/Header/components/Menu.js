@@ -5,7 +5,7 @@ const Menu = (props) => {
   const render = () => {
     return (
       <div
-        className="col"
+        className="col items-start"
         style={{
           display: "flex",
           justifyContent: "space-between",

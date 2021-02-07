@@ -21,7 +21,7 @@ const Topbar = (props) => {
                       {" "}
                       Đăng Nhập{" "}
                     </Link>
-                    <span className="text-gray-50"> hoặc </span>
+                    <span className="mx-3"></span>
                     <Link to="/register" className="u-header-topbar__nav-link">
                       {" "}
                       Đăng Ký{" "}

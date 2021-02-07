@@ -66,8 +66,8 @@ const Footer = (props) => {
         {/* Footer-bottom-widgets */}
         <div className="pt-4 pb-4 bg-gray-13">
           <div className="container">
-            <div className="row align-items-center">
-              <div className="mb-4">
+            <div className="row align-items-center justify-center">
+              <div className="mb-4 mr-4">
                 <Link to="/" className="d-inline-block">
                   <img
                     className="img-fluid"
